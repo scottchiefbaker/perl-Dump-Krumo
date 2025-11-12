@@ -64,6 +64,8 @@ sub __dump {
 		$ret = __dump_array($x);
 	} elsif ($type eq 'HASH') {
 		$ret = __dump_hash($x);
+	} elsif ($type eq 'SCALAR') {
+		$ret = "PTR: " . $x;
 	} elsif (!$type && is_integer($x)) {
 		$ret = __dump_integer($x);
 	} elsif (!$type && is_float($x)) {

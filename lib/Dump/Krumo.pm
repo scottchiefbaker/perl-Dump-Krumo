@@ -25,6 +25,7 @@ our $COLORS = {
 	'binary'       => 111,
 	'scalar_ref'   => 225,
 	'boolean'      => 141,
+	'regexp'       => 164,
 };
 
 my $WIDTH = get_terminal_width();
@@ -93,6 +94,8 @@ sub __dump {
 		$ret = __dump_string($x);
 	} elsif (!$type && is_undef($x)) {
 		$ret = __dump_undef();
+	} elsif ($class eq "Regexp") {
+		$ret = __dump_regexp($class, $x);
 	} elsif ($class) {
 		$ret = __dump_class($class, $x);
 	} else {
@@ -114,6 +117,14 @@ sub __dump_bool {
 	} else {
 		$ret = color($COLORS->{boolean}, "false");
 	}
+
+	return $ret;
+}
+
+sub __dump_regexp {
+	my ($class, $x) = @_;
+
+	my $ret = color($COLORS->{regexp}, "qr$x");
 
 	return $ret;
 }

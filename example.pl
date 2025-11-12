@@ -91,6 +91,8 @@ if (!$item || $item eq 'default') {
 } elsif ($item eq 'bool') {
 	# These are legacy compatible bools so we don't need to `use v5.40`
 	$var = { true => !!1, false => !!0, num => 3 };
+} elsif ($item eq 'regexp') {
+	$var = qr/^(foo)bar.+?\z/,
 }
 
 kx($var);

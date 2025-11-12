@@ -37,7 +37,9 @@ my $x = {
 	hash       => {a=>1, b=>0, c=>[], d=>{}, e=>undef},
     empty_hash => {},
 
-	obj => $t,
+	obj1 => $t,
+	obj2 => bless({a=>1, b=>2}, "Foo"),
+	obj3 => bless(do{\(my $o = 1)}, "JSON::PP::Boolean"),
 
 	bytes => "A\x01B\x7F\x20Z\x00Q",
 };

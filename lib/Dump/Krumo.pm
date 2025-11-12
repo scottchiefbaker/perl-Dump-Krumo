@@ -132,8 +132,22 @@ sub __dump_regexp {
 sub __dump_class {
 	my ($class, $x) = @_;
 
-	my $ret = '"' . color($COLORS->{class}, $class) . "\" :: ";
-	$ret .= __dump_array($x);
+	my $ret      = '"' . color($COLORS->{class}, $class) . "\" :: ";
+	my $reftype  = Scalar::Util::reftype($x);
+	my $y;
+
+	# We need an unblessed copy of the data so we can display it
+	if ($reftype eq 'ARRAY') {
+		$y = [@$x];
+	} elsif ($reftype eq 'HASH') {
+		$y = {%$x};
+	} elsif ($reftype eq 'SCALAR') {
+		$y = $$x;
+	} else {
+		$y = "Unknown class?";
+	}
+
+	$ret .= __dump($y);
 
 	return $ret;
 }

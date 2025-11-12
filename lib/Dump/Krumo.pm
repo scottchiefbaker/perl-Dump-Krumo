@@ -328,6 +328,7 @@ sub __dump_hash {
 		$max_length = 0;
 	}
 
+	# Check to see if any of the array keys need to be quoted
 	my $keys_need_quotes = 0;
 	foreach my $key (@keys) {
 		if ($key =~ /\W/) {
@@ -342,7 +343,7 @@ sub __dump_hash {
 
 		my $key_str = '';
 		if ($keys_need_quotes) {
-			$key_str = '"' . color($COLORS->{hash_key}, $key) . '"';
+			$key_str = "'" . color($COLORS->{hash_key}, $key) . "'";
 		} else {
 			$key_str = color($COLORS->{hash_key}, $key);
 		}

@@ -181,6 +181,11 @@ sub __dump_undef {
 sub __dump_array {
 	my $x = shift();
 
+	# If it's only a single element we return the stringified version of that
+	if (ref($x) ne 'ARRAY') {
+		return __dump("$x");
+	}
+
 	$current_indent_level++;
 
 	my $cnt = scalar(@$x);

@@ -163,7 +163,7 @@ sub __dump_regexp {
 sub __dump_coderef {
 	my ($class, $x) = @_;
 
-	my $ret = color($COLORS->{coderef}, $x);
+	my $ret = color($COLORS->{coderef}, "sub { ... }");
 
 	return $ret;
 }

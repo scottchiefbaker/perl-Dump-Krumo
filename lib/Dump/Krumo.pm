@@ -165,6 +165,11 @@ sub __dump_class {
 		$y = {%$x};
 	} elsif ($reftype eq 'SCALAR') {
 		$y = $$x;
+
+		# Short cut to get boolean values from JSON:PP
+		if ($class eq "JSON::PP::Boolean") {
+			return __dump_bool($x);
+		};
 	} else {
 		$y = "Unknown class?";
 	}

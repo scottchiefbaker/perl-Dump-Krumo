@@ -3,7 +3,6 @@ TODO
 * NaN and INFINITY
 * Unit tests
 * Better handle string quoting ' vs "
-* Consistent quoting for hash keys
 
 Done
 ====
@@ -16,3 +15,4 @@ Done
 * Short circuit array_str_length after 999 chars so we don't waste CPU time
 * Add kxd()
 * Handle the width and include indentation
+* Consistent quoting for hash keys

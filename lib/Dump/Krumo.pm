@@ -328,12 +328,20 @@ sub __dump_hash {
 		$max_length = 0;
 	}
 
+	my $keys_need_quotes = 0;
+	foreach my $key (@keys) {
+		if ($key =~ /\W/) {
+			$keys_need_quotes = 1;
+			last;
+		}
+	}
+
 	# Loop through each key and build the appropriate string for it
 	foreach my $key (@keys) {
 		my $val = $x->{$key};
 
 		my $key_str = '';
-		if ($key =~ /\W/) {
+		if ($keys_need_quotes) {
 			$key_str = '"' . color($COLORS->{hash_key}, $key) . '"';
 		} else {
 			$key_str = color($COLORS->{hash_key}, $key);

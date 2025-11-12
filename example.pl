@@ -27,6 +27,9 @@ my $x = {
 
 	ptr	=> \$str,
 
+	bool_true  => !!1,
+	bool_false => !!0,
+
 	int   => 4,
 	float => 3.1415926,
 

@@ -14,6 +14,7 @@ our $VERSION = 0.1.1;
 our $use_color     = 1; # Output in color
 our $return_string = 0; # Return a string instead of printing it
 our $hash_sort     = 1; # Sort hash keys before output
+our $debug         = 0;
 
 my $current_indent_level = 0;
 our $indent_spaces       = 2;

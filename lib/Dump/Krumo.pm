@@ -385,6 +385,13 @@ sub array_str_len {
 			$len += length($x);
 			$len += 2; # For the quotes around the string
 		}
+
+		# We stop counting after we hit $WIDTH so we don't
+		# waste a bunch of CPU cycles counting something we
+		# won't ever use (useful in big nested objects)
+		if ($len > $WIDTH) {
+			return $WIDTH + 999;
+		}
 	}
 
 	return $len;

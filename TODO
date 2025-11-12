@@ -5,7 +5,6 @@ TODO
 * Unit tests
 * Add kxd()
 * Better handle string quoting ' vs "
-* Short circuit array_string_length after 999 chars so we don't waste CPU time
 
 Done
 ====
@@ -15,3 +14,4 @@ Done
 * Add option for KRUMO_NOSORT
 * Add option for KRUMO_RETURN
 * Add option for KRUMO_NO_COLOR
+* Short circuit array_str_length after 999 chars so we don't waste CPU time

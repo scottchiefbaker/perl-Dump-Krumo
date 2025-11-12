@@ -610,6 +610,11 @@ sub file_put_contents {
 }
 
 sub get_terminal_width {
+	# If there is no $TERM then tput will bail out
+	if (!$ENV{TERM} || -t STDOUT == 0) {
+		return 0;
+	}
+
 	my $tput = `tput cols`;
 
 	my $width = 0;

@@ -35,8 +35,17 @@ $WIDTH = 100;
 sub kx {
 	my @arr = @_;
 
-	my @items = ();
-	my $cnt   = scalar(@arr);
+	my @items    = ();
+	my $cnt      = scalar(@arr);
+	my $is_array = 0;
+
+	# If someone passes in a real array (not ref) we fake it out
+	if ($cnt > 1) {
+		@arr      = (\@_); # Convert to arrayref
+		$is_array = 1;
+	}
+
+	# Loop through each item and dump it out
 	foreach my $item (@arr) {
 		push(@items, __dump($item));
 	}
@@ -46,11 +55,17 @@ sub kx {
 	}
 
 	my $str = join(", ", @items);
+
+	# If it's a real array we remove the false [ ] added by __dump()
+	if ($is_array) {
+		my $len = length($str) - 2;
+		$str    = substr($str, 1, $len);
+	}
+
 	if ($cnt > 1) {
 		$str = "($str)";
 	}
 
-	#k(@arr);
 	print $str . "\n";
 }
 

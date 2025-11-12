@@ -6,6 +6,7 @@ use v5.16;
 
 use Dump::Krumo;
 use Time::Piece;
+use Devel::Peek;
 
 ###############################################################################
 ###############################################################################
@@ -69,24 +70,27 @@ my $w = {
     int => "N91-1-1-1",
 };
 
-my $item = $ARGV[0] || 1;
+my $item = $ARGV[0] || '';
 
 my $var;
-if ($item == 1) {
+if (!$item || $item eq 'default') {
 	$var = $x;
-} elsif ($item == 2) {
+} elsif ($item eq 'hash') {
 	$var = $y;
-} elsif ($item == 3) {
+} elsif ($item eq 'array') {
 	$var = $z;
-} elsif ($item == 4) {
+} elsif ($item eq 'nesthash') {
 	$var = $w;
-} elsif ($item == 5) {
+} elsif ($item eq 'arrayref') {
 	$var = {
 		'long'  => [qw(one two three four five six seven eight nine ten eleven twelve)],
 		'short' => [qw(one two three four five)],
 	};
-} elsif ($item == 6) {
+} elsif ($item eq 'class') {
 	$var = $t;
+} elsif ($item eq 'bool') {
+	# These are legacy compatible bools so we don't need to `use v5.40`
+	$var = { true => !!1, false => !!0, num => 3 };
 }
 
 kx($var);

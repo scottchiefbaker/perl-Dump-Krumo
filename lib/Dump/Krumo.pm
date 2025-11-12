@@ -171,7 +171,7 @@ sub __dump_coderef {
 sub __dump_glob {
 	my ($class, $x) = @_;
 
-	my $ret = color($COLORS->{glob}, $x);
+	my $ret = color($COLORS->{glob}, "\\" . $$x);
 
 	return $ret;
 }

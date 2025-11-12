@@ -19,11 +19,14 @@ $Dump::Krumo::debug = $debug;
 ###############################################################################
 ###############################################################################
 
-my $t   = localtime();
-my $str = "foobar";
+my $item = $ARGV[0] || '';
+my $t    = localtime();
 
-my $x = {
-    undef => undef,
+my $var;
+if (!$item || $item eq 'default') {
+	my $str = "foobar";
+
+	$var = { undef => undef,
 
     # strings
     str               => 'Jason',
@@ -59,7 +62,8 @@ my $x = {
 	glob => \*STDOUT,
 };
 
-my $y = { foo => [
+} elsif ($item eq 'hash') {
+	$var = { foo => [
         { name => 'Andi', dob => '1988-10-10', employee_id=>1, some_other_attribute => 'some value', },
         { name => 'Budi', dob => '1983-01-22', employee_id=>2, some_other_attribute => 'some value', },
 		[qw(one two three four five six seven eight nine ten eleven)],
@@ -67,44 +71,32 @@ my $y = { foo => [
     ],
 };
 
-my $z = [qw(one two three four five six seven eight nine ten eleven twelve)];
-
-my $w = {
-	extended => [
-        {
-            ip => "65.182.224.220",
-            ip_family => "ipv4",
-            mac => "00:00:00:00:00:00",
-            type => "static",
-        }, # .[0]
-        {
-            ip => "65.182.224.218",
-            ip_family => "ipv4",
-            mac => "B8:27:EB:D5:98:37",
-            type => "dhcp",
-        },
-    ], # in this case, this line is not aligned with the matching "[" by DD
-    int => "N91-1-1-1",
-};
-
-my $item = $ARGV[0] || '';
-
-my $var;
-if (!$item || $item eq 'default') {
-	$var = $x;
-} elsif ($item eq 'hash') {
-	$var = $y;
 } elsif ($item eq 'array') {
-	$var = $z;
+	$var = [qw(one two three four five six seven eight nine ten eleven twelve)];
 } elsif ($item eq 'nesthash') {
-	$var = $w;
+	$var = { extended => [
+			{
+				ip => "65.182.224.220",
+				ip_family => "ipv4",
+				mac => "00:00:00:00:00:00",
+				type => "static",
+			}, # .[0]
+			{
+				ip => "65.182.224.218",
+				ip_family => "ipv4",
+				mac => "B8:27:EB:D5:98:37",
+				type => "dhcp",
+			},
+		], # in this case, this line is not aligned with the matching "[" by DD
+		int => "N91-1-1-1",
+	};
 } elsif ($item eq 'arrayref') {
 	$var = {
 		'long'  => [qw(one two three four five six seven eight nine ten eleven twelve)],
 		'short' => [qw(one two three four five)],
 	};
 } elsif ($item eq 'class') {
-	$var = $t;
+	$var  = $t;
 } elsif ($item eq 'bool') {
 	# These are legacy compatible bools so we don't need to `use v5.40`
 	$var = { true => !!1, false => !!0, num => 3 };

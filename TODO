@@ -3,7 +3,6 @@ TODO
 * Handle the width and include indentation
 * NaN and INFINITY
 * Unit tests
-* Add kxd()
 * Better handle string quoting ' vs "
 
 Done
@@ -15,3 +14,4 @@ Done
 * Add option for KRUMO_RETURN
 * Add option for KRUMO_NO_COLOR
 * Short circuit array_str_length after 999 chars so we don't waste CPU time
+* Add kxd()

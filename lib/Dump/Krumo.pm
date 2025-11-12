@@ -8,7 +8,7 @@ use Scalar::Util;
 package Dump::Krumo;
 
 use Exporter 'import';
-our @EXPORT  = qw(kx);
+our @EXPORT  = qw(kx kxd);
 our $VERSION = 0.1.1;
 
 our $use_color     = 1; # Output in color
@@ -40,6 +40,7 @@ $WIDTH = 100;
 ###############################################################################
 ###############################################################################
 
+# Dump the variable information
 sub kx {
 	my @arr = @_;
 
@@ -79,6 +80,18 @@ sub kx {
 	} else {
 		print "$str\n";
 	}
+}
+
+# Dump the variable and die and output file/line
+sub kxd {
+	kx(@_);
+
+	my @call = caller();
+	my $file = $call[1];
+	my $line = $call[2];
+
+	printf("\nDump::Krumo called from %s line %s\n", color('white', $file), color(194, "#$line"));
+	exit(15);
 }
 
 sub __dump {

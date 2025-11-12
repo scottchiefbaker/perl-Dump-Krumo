@@ -11,6 +11,10 @@ use Exporter 'import';
 our @EXPORT  = qw(kx);
 our $VERSION = 0.1.1;
 
+our $use_color     = 1; # Output in color
+our $return_string = 0; # Return a string instead of printing it
+our $hash_sort     = 1; # Sort hash keys before output
+
 my $current_indent_level = 0;
 our $indent_spaces       = 2;
 
@@ -70,7 +74,11 @@ sub kx {
 		$str = "($str)";
 	}
 
-	print $str . "\n";
+	if ($return_string) {
+		return $str;
+	} else {
+		print "$str\n";
+	}
 }
 
 sub __dump {
@@ -279,9 +287,14 @@ sub __dump_hash {
 
 	my $ret;
 	my @items = ();
-	my @keys  = sort(keys(%$x));
+	my @keys  = keys(%$x);
 	my @vals  = values(%$x);
 	my $cnt   = scalar(@keys);
+
+	# There may be some weird scenario where we do NOT want to sort
+	if ($hash_sort) {
+		@keys = sort(@keys);
+	}
 
 	if ($cnt == 0) {
 		$current_indent_level--;
@@ -518,7 +531,7 @@ sub color {
     my ($str, $txt) = @_;
 
     # If we're NOT connected to a an interactive terminal don't do color
-    if (-t STDOUT == 0) { return $txt || ""; }
+    if (!$use_color || -t STDOUT == 0) { return $txt || ""; }
 
     # No string sent in, so we just reset
     if (!length($str) || $str eq 'reset') { return "\e[0m"; }

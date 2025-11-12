@@ -1,9 +1,17 @@
+TODO
+====
 * Handle the width and include indentation
-* New options for KRUMO_NOSORT and KRUMO_RETURN
 * NaN and INFINITY
 * Unit tests
 * Add kxd()
 * Better handle string quoting ' vs "
+* Short circuit array_string_length after 999 chars so we don't waste CPU time
+
+Done
+====
 * Regexp objects
 * Glob objects
 * Bool values
+* Add option for KRUMO_NOSORT
+* Add option for KRUMO_RETURN
+* Add option for KRUMO_NO_COLOR

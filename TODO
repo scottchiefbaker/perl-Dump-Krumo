@@ -1,0 +1,5 @@
+* Handle the width and include indentation
+* New options for KRUMO_NOSORT and KRUMO_RETURN
+* NaN and INFINITY
+* Unit tests
+* Add kxd()

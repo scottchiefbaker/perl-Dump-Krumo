@@ -5,6 +5,9 @@ use warnings;
 use Test::More;
 use Dump::Krumo;
 
-is(kx([1,2,3]), 1);
+$Dump::Krumo::return_string = 1;
+
+is(kx([1,2,3]), '[1, 2, 3]');
+is(kx([!!1])  , '[true]');
 
 done_testing();

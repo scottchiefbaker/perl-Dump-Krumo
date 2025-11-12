@@ -41,7 +41,7 @@ my $x = {
 	int   => 4,
 	float => 3.1415926,
 
-	array       => [qw(Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum)],
+	array       => [qw(Lorem Ipsum is simply "dummy" text 'of' the printing and typesetting industry. Lorem Ipsum)],
 	array2      => [1, 2.2, "3", "a", "b", undef, [], 0, -1, -1.2],
 	empty_array => [],
 

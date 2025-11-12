@@ -501,6 +501,13 @@ sub get_terminal_width {
 	return $width;
 }
 
+# Return bool if a function exists. Example: has_function("builtin::is_bool")
+sub has_function {
+	my $func_name = shift();
+	my $ret       = int(exists &$func_name);
+
+	return $ret;
+}
 
 # Creates methods k() and kd() to print, and print & die respectively
 BEGIN {

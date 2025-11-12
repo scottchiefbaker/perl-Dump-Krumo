@@ -36,7 +36,10 @@ our $COLORS = {
 };
 
 my $WIDTH = get_terminal_width();
-$WIDTH = 100;
+$WIDTH  ||= 100;
+
+# Global var to track the indent to the right end of the most recent hash key
+my $left_pad_width = 0;
 
 ###############################################################################
 ###############################################################################
@@ -316,12 +319,13 @@ sub __dump_hash {
 	}
 
 	# See if we need to switch to column mode to output this array
+	my $max_length  = max_length(@keys);
+	$left_pad_width = $max_length;
 	my $column_mode = needs_column_mode($x);
-	my $max_length  = 0;
 
-	# If we're too wide for the screen we drop to column mode
-	if ($column_mode) {
-		$max_length  = max_length(@keys);
+	# If we're not in column mode there is no need to compensate for this
+	if (!$column_mode) {
+		$max_length = 0;
 	}
 
 	# Loop through each key and build the appropriate string for it
@@ -442,14 +446,35 @@ sub needs_column_mode {
 		$len += 2 * $cnt; # ' => ' and the ', ' for each item
 	}
 
+	my $content_len = $len;
+
+	# Current number of spaces we're indented from the left
+	my $left_indent  = ($current_indent_level - 1) * $indent_spaces;
+	# Where the ' => ' in the hash key ends
+	my $pad_width    = $left_pad_width + 4; # For the ' => '
+
+	# Add it all together
+	$len = $left_indent + $pad_width + $len;
+
 	# If we're too wide for the screen we drop to column mode
-	if ($len > $WIDTH) {
+	# Our math isn't 100% down the character so we use 97% to give
+	# ourselves some wiggle room
+	if ($len > ($WIDTH * .97)) {
 		$ret = 1;
 	}
 
-	#$ret = 1;
-	#k($x);
-	#k("$len => $ret");
+	# This math is kinda gnarly so if we turn on debug mode we can
+	# see each array/hash and how we calculate the length
+	if ($debug) {
+		state $first = 1;
+
+		if ($first) {
+			printf("Screen width: %d\n\n", $WIDTH * .97);
+			printf("Left Indent | Hash Padding | Content | Total\n");
+			$first = 0;
+		}
+		printf("%8d    +    %6d    +  %4d   = %4d    (%d)\n", $left_indent, $pad_width, $content_len, $len, $ret);
+	}
 
 	return $ret;
 }

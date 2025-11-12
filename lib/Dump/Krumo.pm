@@ -27,6 +27,7 @@ our $COLORS = {
 	'boolean'      => 141,
 	'regexp'       => 164,
 	'glob'         => 40,
+	'coderef'      => 168,
 };
 
 my $WIDTH = get_terminal_width();
@@ -99,6 +100,8 @@ sub __dump {
 		$ret = __dump_regexp($class, $x);
 	} elsif ($type eq "GLOB") {
 		$ret = __dump_glob($class, $x);
+	} elsif ($type eq "CODE") {
+		$ret = __dump_coderef($class, $x);
 	} elsif ($class) {
 		$ret = __dump_class($class, $x);
 	} else {
@@ -128,6 +131,14 @@ sub __dump_regexp {
 	my ($class, $x) = @_;
 
 	my $ret = color($COLORS->{regexp}, "qr$x");
+
+	return $ret;
+}
+
+sub __dump_coderef {
+	my ($class, $x) = @_;
+
+	my $ret = color($COLORS->{coderef}, $x);
 
 	return $ret;
 }

@@ -46,6 +46,8 @@ my $x = {
 
 	bytes => "A\x01B\x7F\x20Z\x00Q",
 
+	coderef => \&color,
+
 	glob => \*STDOUT,
 };
 

@@ -7,6 +7,14 @@ use v5.16;
 use Dump::Krumo;
 use Time::Piece;
 use Devel::Peek;
+use Getopt::Long;
+
+my $debug = 0;
+GetOptions(
+	'debug' => \$debug,
+);
+
+$Dump::Krumo::debug = $debug;
 
 ###############################################################################
 ###############################################################################

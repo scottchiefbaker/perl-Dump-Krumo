@@ -24,6 +24,7 @@ our $COLORS = {
 	'class'        => 118,
 	'binary'       => 111,
 	'scalar_ref'   => 225,
+	'boolean'      => 141,
 };
 
 my $WIDTH = get_terminal_width();
@@ -82,6 +83,8 @@ sub __dump {
 		$ret = __dump_hash($x);
 	} elsif ($type eq 'SCALAR') {
 		$ret = color($COLORS->{scalar_ref}, "* Scalar reference");
+	} elsif (!$type && is_bool_val($x)) {
+		$ret = __dump_bool($x);
 	} elsif (!$type && is_integer($x)) {
 		$ret = __dump_integer($x);
 	} elsif (!$type && is_float($x)) {
@@ -101,6 +104,19 @@ sub __dump {
 
 ################################################################################
 ################################################################################
+
+sub __dump_bool {
+	my $x = shift();
+	my $ret;
+
+	if ($x) {
+		$ret = color($COLORS->{boolean}, "true");
+	} else {
+		$ret = color($COLORS->{boolean}, "false");
+	}
+
+	return $ret;
+}
 
 sub __dump_class {
 	my ($class, $x) = @_;
@@ -411,6 +427,22 @@ sub is_float {
     my $ret     = defined($value) && $value =~ /^-?\d+\.\d+(e[+-]\d+)?$/;
 
 	return $ret;
+}
+
+# Borrowed from builtin::compat
+sub is_bool_val {
+	my $value = shift;
+
+	# Make sure the variable is defined, is not a reference and is a dualval
+	if (!defined($value))              { return 0; }
+	if (length(ref($value)) != 0)      { return 0; }
+	if (!Scalar::Util::isdual($value)) { return 0; }
+
+	# Make sure the string and integer versions match
+	if ($value == 1 && $value eq '1')  { return 1; }
+	if ($value == 0 && $value eq '')   { return 1; }
+
+	return 0;
 }
 
 ################################################################################

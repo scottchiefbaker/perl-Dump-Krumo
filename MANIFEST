@@ -1,0 +1,6 @@
+example.pl
+Makefile.PL
+MANIFEST
+lib/Dump/Krumo.pm
+t/00-load.t
+t/01-general.t

@@ -45,6 +45,8 @@ my $x = {
 	obj3 => bless(do{\(my $o = 1)}, "JSON::PP::Boolean"),
 
 	bytes => "A\x01B\x7F\x20Z\x00Q",
+
+	glob => \*STDOUT,
 };
 
 my $y = { foo => [

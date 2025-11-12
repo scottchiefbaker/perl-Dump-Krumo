@@ -26,6 +26,7 @@ our $COLORS = {
 	'scalar_ref'   => 225,
 	'boolean'      => 141,
 	'regexp'       => 164,
+	'glob'         => 40,
 };
 
 my $WIDTH = get_terminal_width();
@@ -74,7 +75,7 @@ sub kx {
 sub __dump {
 	my $x     = shift();
 	my $type  = ref($x);
-	my $class = Scalar::Util::blessed($x);
+	my $class = Scalar::Util::blessed($x) || "";
 
 	my $ret;
 
@@ -96,6 +97,8 @@ sub __dump {
 		$ret = __dump_undef();
 	} elsif ($class eq "Regexp") {
 		$ret = __dump_regexp($class, $x);
+	} elsif ($type eq "GLOB") {
+		$ret = __dump_glob($class, $x);
 	} elsif ($class) {
 		$ret = __dump_class($class, $x);
 	} else {
@@ -125,6 +128,14 @@ sub __dump_regexp {
 	my ($class, $x) = @_;
 
 	my $ret = color($COLORS->{regexp}, "qr$x");
+
+	return $ret;
+}
+
+sub __dump_glob {
+	my ($class, $x) = @_;
+
+	my $ret = color($COLORS->{glob}, $x);
 
 	return $ret;
 }

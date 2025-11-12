@@ -23,6 +23,7 @@ our $COLORS = {
 	'float'        => 51,
 	'class'        => 118,
 	'binary'       => 111,
+	'scalar_ref'   => 225,
 };
 
 my $WIDTH = get_terminal_width();
@@ -65,7 +66,7 @@ sub __dump {
 	} elsif ($type eq 'HASH') {
 		$ret = __dump_hash($x);
 	} elsif ($type eq 'SCALAR') {
-		$ret = "PTR: " . $x;
+		$ret = color($COLORS->{scalar_ref}, "* Scalar reference");
 	} elsif (!$type && is_integer($x)) {
 		$ret = __dump_integer($x);
 	} elsif (!$type && is_float($x)) {

@@ -670,6 +670,25 @@ sub has_function {
 	return $ret;
 }
 
+sub quote_string {
+	my ($s) = @_;
+
+	# Use single quotes if no special chars
+	if ($s !~ /[\'\\\n\r\t\f\b\$@"]/ ) {
+		return "'$s'";
+	}
+
+	# Otherwise, escape for double quotes
+	(my $escaped = $s) =~ s/([\\"])/\\$1/g;
+	$escaped =~ s/\n/\\n/g;
+	$escaped =~ s/\r/\\r/g;
+	$escaped =~ s/\t/\\t/g;
+	$escaped =~ s/\f/\\f/g;
+	$escaped =~ s/\b/\\b/g;
+
+	return "\"$escaped\"";
+}
+
 # Creates methods k() and kd() to print, and print & die respectively
 BEGIN {
 	if (eval { require Data::Dump::Color }) {

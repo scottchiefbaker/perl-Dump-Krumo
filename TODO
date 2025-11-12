@@ -4,6 +4,7 @@ TODO
 * NaN and INFINITY
 * Unit tests
 * Better handle string quoting ' vs "
+* Consistent quoting for hash keys
 
 Done
 ====

@@ -3,3 +3,7 @@
 * NaN and INFINITY
 * Unit tests
 * Add kxd()
+* Better handle string quoting ' vs "
+* Regexp objects
+* Glob objects
+* Bool values

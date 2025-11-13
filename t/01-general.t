@@ -49,7 +49,8 @@ is(kx( { } ) , '{}');
 
 # Scalar ref
 my $str = "foobar";
-is(kx(\$str) , "\\'foobar'");
+is(kx(\$str)    , "\\'foobar'");
+is(kx(\"scott") , "\\'scott'");
 
 # Hashes
 is(kx("{a => 1, b=>2}") , '"{a => 1, b=>2}"');

@@ -232,7 +232,7 @@ sub __dump_string {
 	if (!$printable) {
 		$ret = color($COLORS->{binary}, bin2hex($x));
 	# If it's a simple string we single quote it
-	} elsif ($x =~ /^[\w .,":-]*$/g) {
+	} elsif ($x =~ /^[\w .,":;?!#\$%^*&\/=-]*$/g) {
 		$ret = "'" . color($COLORS->{string}, "$x") . "'";
 	# Otherwise we clean it up and then double quote it
 	} else {

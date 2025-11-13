@@ -19,6 +19,11 @@ is(kx(0)          , "0"              );
 is(kx('0')        , "0"              );
 is(kx("1\x{0}2")  , '0x310032'       ); # Null byte in the middle of a string
 
+# Regexps
+is(kx(qr((foo)?(bar))), 'qr(?^:(foo)?(bar))' );
+is(kx(qr(^(foo)))     , 'qr(?^:^(foo))'      );
+is(kx(qr(foo$))       , 'qr(?^:foo$)'        );
+
 # Array references
 is(kx([1,2,3])       , '[1, 2, 3]'     );
 is(kx(["one","two"]) , "['one', 'two']");

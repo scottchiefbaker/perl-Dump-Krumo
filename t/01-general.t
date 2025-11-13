@@ -17,6 +17,7 @@ is(kx("")         , "''"        );
 is(kx("a'b")      , "\"a'b\""   );
 is(kx(0)          , "0"         );
 is(kx('0')        , "0"         );
+is(kx("1\x{0}2")  , '0x310032'  ); # Null byte in the middle of a string
 
 # Array references
 is(kx([1,2,3])       , '[1, 2, 3]'     );

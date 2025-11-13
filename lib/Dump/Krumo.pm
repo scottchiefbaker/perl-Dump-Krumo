@@ -230,7 +230,7 @@ sub __dump_string {
 	my $ret = '';
 
 	if (!$printable) {
-		$ret = color($COLORS->{binary}, "0x" . unpack("h*", $x));
+		$ret = color($COLORS->{binary}, bin2hex($x));
 	# If it's a simple string we single quote it
 	} elsif ($x =~ /^[\w .,":-]*$/g) {
 		$ret = "'" . color($COLORS->{string}, "$x") . "'";
@@ -673,6 +673,7 @@ sub has_function {
 	return $ret;
 }
 
+# See also B::perlstring as a possible alternative
 sub quote_string {
 	my ($s) = @_;
 

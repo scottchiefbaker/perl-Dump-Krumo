@@ -138,7 +138,7 @@ sub __dump {
 	} elsif ($class) {
 		$ret = __dump_class($class, $x);
 	} else {
-		$ret = "Unknown variable type:'$type'";
+		$ret = "Unknown variable type: '$type'";
 	}
 
 	return $ret;

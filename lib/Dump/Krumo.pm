@@ -80,7 +80,7 @@ sub kx {
 	}
 
 	if ($return_string) {
-		return $str;
+		return "$str";
 	} else {
 		print "$str\n";
 	}
@@ -581,7 +581,7 @@ sub color {
     my ($str, $txt) = @_;
 
     # If we're NOT connected to a an interactive terminal don't do color
-    if (!$use_color || -t STDOUT == 0) { return $txt || ""; }
+    if (!$use_color || -t STDOUT == 0) { return $txt // ""; }
 
     # No string sent in, so we just reset
     if (!length($str) || $str eq 'reset') { return "\e[0m"; }

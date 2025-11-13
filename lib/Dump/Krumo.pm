@@ -9,7 +9,9 @@ package Dump::Krumo;
 
 use Exporter 'import';
 our @EXPORT  = qw(kx kxd);
-our $VERSION = 0.1.1;
+
+# https://blogs.perl.org/users/grinnz/2018/04/a-guide-to-versions-in-perl.html
+our $VERSION = 'v0.1.1';
 
 our $use_color     = 1; # Output in color
 our $return_string = 0; # Return a string instead of printing it

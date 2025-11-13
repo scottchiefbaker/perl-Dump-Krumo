@@ -223,10 +223,6 @@ sub __dump_string {
 	my $slash_r = color($COLORS->{control_char}, '\\r') . color($COLORS->{string});
 	my $slash_t = color($COLORS->{control_char}, '\\t') . color($COLORS->{string});
 
-	$x =~ s/\n/$slash_n/g;
-	$x =~ s/\r/$slash_r/g;
-	$x =~ s/\t/$slash_t/g;
-
 	my $ret = '';
 
 	if (!$printable) {
@@ -240,6 +236,9 @@ sub __dump_string {
 		$ret = '"' . color($COLORS->{string}, "$x") . '"';
 	}
 
+	$ret =~ s/\n/$slash_n/g;
+	$ret =~ s/\r/$slash_r/g;
+	$ret =~ s/\t/$slash_t/g;
 
 	return $ret;
 }

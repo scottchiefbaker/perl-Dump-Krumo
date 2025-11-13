@@ -245,7 +245,7 @@ sub __dump_string {
 	my $ret = '';
 
 	if (!$printable) {
-		$ret = color($COLORS->{binary}, bin2hex($x));
+		$ret = color($COLORS->{binary}, 'pack("H*", ' . bin2hex($x) . ")");
 	# If it's a simple string we single quote it
 	} elsif ($x =~ /^[\w .,":;?!#\$%^*&\/=-]*$/g) {
 		$ret = "'" . color($COLORS->{string}, "$x") . "'";
@@ -264,7 +264,7 @@ sub __dump_string {
 
 sub bin2hex {
 	my $bytes = shift();
-	my $ret   = sprintf("0x%s", uc(unpack("H*", $bytes)));
+	my $ret   = uc(unpack("H*", $bytes));
 
 	return $ret;
 }

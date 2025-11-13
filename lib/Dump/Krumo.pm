@@ -709,6 +709,83 @@ BEGIN {
 	}
 }
 
+=encoding utf8
+
+=head1 NAME
+
+Dump::Krumo - Fancy, colorful, human readable dumps of your data
+
+=head1 SYNOPSIS
+
+    use Random::Simple;
+
+    my $data = { one => 1, two => 2, three => 3 };
+	kx($data);
+
+	my $list = ['one', 'two', 'three', 'four'];
+	kx($list);
+
+=head1 DESCRIPTION
+
+Colorfully dump your data to make debugging your variables easier.
+C<Dump::Krumo> focuses on making your data human readable and easily parseable.
+
+=head1 METHODS
+
+=over 4
+
+=item B<kx($var)>
+
+Debug print C<$var>
+
+=item B<kxd($var)>
+
+Debug print C<$var> and C<die()>.
+
+=back
+
+=head1 OPTIONS
+
+=over 4
+
+=item C<$Dump::Krumo::use_color = 1>
+
+Turn on/off color
+
+=item C<$Dump::Krumo::return_string = 0>
+
+Return a string instead of printing out
+
+=item C<$Dump::Krumo::indent_spaces = 2>
+
+Number of spaces to indent each level
+
+=back
+
+=head1 SEE ALSO
+
+=over
+
+=item *
+L<Data::Dumper>
+
+=item *
+L<Data::Dump>
+
+=item *
+L<Data::Dump::Color>
+
+=item *
+L<Data::Printer>
+
+=back
+
+=head1 AUTHOR
+
+Scott Baker - L<https://www.perturb.org/>
+
+=cut
+
 1;
 
 # vim: tabstop=4 shiftwidth=4 noexpandtab autoindent softtabstop=4

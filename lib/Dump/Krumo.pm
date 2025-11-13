@@ -36,6 +36,7 @@ our $COLORS = {
 	'regexp'       => 164,
 	'glob'         => 40,
 	'coderef'      => 168,
+	'vstring'      => 153,
 };
 
 my $WIDTH = get_terminal_width();
@@ -132,6 +133,8 @@ sub __dump {
 		$ret = __dump_glob($class, $x);
 	} elsif ($type eq "CODE") {
 		$ret = __dump_coderef($class, $x);
+	} elsif ($type eq "VSTRING") {
+		$ret = __dump_vstring($x);
 	} elsif ($class) {
 		$ret = __dump_class($class, $x);
 	} else {
@@ -214,6 +217,17 @@ sub __dump_integer {
 sub __dump_float {
 	my $x   = shift();
 	my $ret = color($COLORS->{float}, $x);
+
+	return $ret;
+}
+
+sub __dump_vstring {
+	my $x   = shift();
+
+	my @parts = unpack("C*", $$x);
+	my $str   = "\\v" .(join ".", @parts);
+
+	my $ret = color($COLORS->{vstring}, $str);
 
 	return $ret;
 }

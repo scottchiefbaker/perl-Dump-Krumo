@@ -16,3 +16,4 @@ Done
 * Consistent quoting for hash keys
 * Unit tests
 * Better handle string quoting ' vs "
+* Handle VSTRINGS (version strings)

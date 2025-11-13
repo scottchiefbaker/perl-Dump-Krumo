@@ -60,6 +60,7 @@ if (!$item || $item eq 'default') {
 	coderef => \&color,
 
 	glob => \*STDOUT,
+	version => \v9.18.27,
 };
 
 } elsif ($item eq 'hash') {
@@ -104,6 +105,8 @@ if (!$item || $item eq 'default') {
 	$var = qr/^(foo)bar.+?\z/,
 } elsif ($item eq 'zero') {
 	$var = 0;
+} elsif ($item eq 'version') {
+	$var = \v9.18.27;
 }
 
 kx($var);

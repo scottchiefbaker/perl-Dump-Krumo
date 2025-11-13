@@ -7,17 +7,17 @@ use Dump::Krumo;
 
 $Dump::Krumo::return_string = 1;
 
-is(kx(undef)      , 'undef'     );
-is(kx(1.5)        , '1.5'       );
-is(kx("a\nb")     , '"a\nb"'    );
-is(kx("\*STDOUT") , '"*STDOUT"' );
-is(kx("Doolis")   , "'Doolis'"  );
-is(kx(12345)      , "12345"     );
-is(kx("")         , "''"        );
-is(kx("a'b")      , "\"a'b\""   );
-is(kx(0)          , "0"         );
-is(kx('0')        , "0"         );
-is(kx("1\x{0}2")  , '0x310032'  ); # Null byte in the middle of a string
+is(kx(undef)      , 'undef'          );
+is(kx(1.5)        , '1.5'            );
+is(kx("a\nb")     , '"a\nb"'         );
+is(kx(\*STDOUT)   , '\*main::STDOUT' );
+is(kx("Doolis")   , "'Doolis'"       );
+is(kx(12345)      , "12345"          );
+is(kx("")         , "''"             );
+is(kx("a'b")      , "\"a'b\""        );
+is(kx(0)          , "0"              );
+is(kx('0')        , "0"              );
+is(kx("1\x{0}2")  , '0x310032'       ); # Null byte in the middle of a string
 
 # Array references
 is(kx([1,2,3])       , '[1, 2, 3]'     );

@@ -102,6 +102,8 @@ if (!$item || $item eq 'default') {
 	$var = { true => !!1, false => !!0, num => 3 };
 } elsif ($item eq 'regexp') {
 	$var = qr/^(foo)bar.+?\z/,
+} elsif ($item eq 'zero') {
+	$var = 0;
 }
 
 kx($var);

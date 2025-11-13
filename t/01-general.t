@@ -7,11 +7,7 @@ use Dump::Krumo;
 
 $Dump::Krumo::return_string = 1;
 
-is(kx([1,2,3])    , '[1, 2, 3]' );
-is(kx([!!1])      , '[true]'    );
-is(kx([!!0])      , '[false]'   );
 is(kx(undef)      , 'undef'     );
-is(kx(1,2,3)      , '(1, 2, 3)' );
 is(kx(1.5)        , '1.5'       );
 is(kx("a\nb")     , '"a\nb"'    );
 is(kx("\*STDOUT") , '"*STDOUT"' );
@@ -22,8 +18,19 @@ is(kx("a'b")      , "\"a'b\""   );
 is(kx(0)          , "0"         );
 is(kx('0')        , "0"         );
 
+# Array references
+is(kx([1,2,3])       , '[1, 2, 3]');
+is(kx(["one","two"]) , "['one', 'two']");
+
+# Booleans
+is(kx(!!1) , 'true' );
+is(kx(!!0) , 'false');
+
+# Raw array
+is(kx(1,2,3) , '(1, 2, 3)');
+
 # This is really an error???
-is(kx(), "()");
+is(kx() , "()");
 
 # Empty hash/array
 is(kx( [ ] ) , '[]');
@@ -39,6 +46,7 @@ is(kx("{one => 1}")     , '"{one => 1}"');
 is(kx("{'a b' => 1}")   , '"{\'a b\' => 1}"');
 is(kx("{'a\"b' => 1}")  , '"{\'a"b\' => 1}"');
 
+# Code reference
 is(kx(\&done_testing) , 'sub { ... }');
 
 done_testing();

@@ -53,7 +53,7 @@ sub kx {
 	my $is_array = 0;
 
 	# If someone passes in a real array (not ref) we fake it out
-	if ($cnt > 1) {
+	if ($cnt > 1 || $cnt == 0) {
 		@arr      = (\@_); # Convert to arrayref
 		$is_array = 1;
 	}
@@ -75,7 +75,7 @@ sub kx {
 		$str    = substr($str, 1, $len);
 	}
 
-	if ($cnt > 1) {
+	if ($cnt > 1 || $cnt == 0) {
 		$str = "($str)";
 	}
 

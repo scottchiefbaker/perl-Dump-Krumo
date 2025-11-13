@@ -22,7 +22,7 @@ is(kx(0)          , "0"            );
 is(kx('0')        , "0"            );
 
 # This is really an error???
-is(kx()           , "UNKNOWN TYPE" );
+is(kx()           , "()");
 
 # Empty hash/array
 is(kx( [ ] ) , '[]');

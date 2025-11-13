@@ -528,6 +528,10 @@ sub needs_column_mode {
 sub is_printable {
 	my ($str) = @_;
 
+	if (length($str) == 1 && (ord($str) >= 127)) {
+		return 0;
+	}
+
 	my $ret = 0;
 	if (defined($str) && $str =~ /^[[:print:]\n\r\t]*$/) {
 		$ret = 1;

@@ -244,6 +244,13 @@ sub __dump_string {
 	return $ret;
 }
 
+sub bin2hex {
+	my $bytes = shift();
+	my $ret   = sprintf("0x%s", uc(unpack("H*", $bytes)));
+
+	return $ret;
+}
+
 sub __dump_undef {
 	my $ret = color($COLORS->{undef}, 'undef');
 

@@ -36,7 +36,7 @@ if (!$item || $item eq 'default') {
 	str_quote        => '"foo"',
 	str_single_quote => "foo'bar",
 
-	ptr	=> \$str,
+	scalar_ref => \$str,
 
 	bool_true  => !!1,
 	bool_false => !!0,

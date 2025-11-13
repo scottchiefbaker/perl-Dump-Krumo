@@ -244,7 +244,24 @@ sub __dump_string {
 
 	my $ret = '';
 
-	if (!$printable) {
+	# For short strings we show the unprintable chars as \x{00} escapes
+	if (!$printable && (length($x) < 20)) {
+		my @p = unpack("C*", $x);
+
+		my $str  = '';
+		foreach my $x (@p) {
+			my $is_printable = is_printable(chr($x));
+
+			if ($is_printable) {
+				$str .= chr($x);
+			} else {
+				$str .= '\\x{' . sprintf("%02X", $x) . '}';
+			}
+		}
+
+		$ret = color($COLORS->{binary}, "\"$str\"");
+	# Longer unprintable stuff we just spit out the raw HEX
+	} elsif (!$printable) {
 		$ret = color($COLORS->{binary}, 'pack("H*", ' . bin2hex($x) . ")");
 	# If it's a simple string we single quote it
 	} elsif ($x =~ /^[\w .,":;?!#\$%^*&\/=-]*$/g) {

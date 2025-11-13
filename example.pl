@@ -55,7 +55,7 @@ if (!$item || $item eq 'default') {
 	obj2 => bless({a=>1, b=>2}, "Foo"),
 	obj3 => bless(do{\(my $o = 1)}, "JSON::PP::Boolean"),
 
-	bytes => "A\x01B\x7F\x20Z\x00Q",
+	bytes => "A\x01B\x02C\x03D\x04",
 
 	coderef => \&color,
 

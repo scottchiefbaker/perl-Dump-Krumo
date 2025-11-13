@@ -43,6 +43,11 @@ Colorfully dump your data to make debugging your variables easier.
 
     Number of spaces to indent each level
 
+- `$Dump::Krumo::disable = 0`
+
+    Disable all output from `Dump::Krumo`. This allows you leave all your debug
+    print statements in your code, and disable them at runtime as needed.
+
 # SEE ALSO
 
 - [Data::Dumper](https://metacpan.org/pod/Data%3A%3ADumper)

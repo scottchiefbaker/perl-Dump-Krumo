@@ -14,7 +14,8 @@ our $VERSION = 0.1.1;
 our $use_color     = 1; # Output in color
 our $return_string = 0; # Return a string instead of printing it
 our $hash_sort     = 1; # Sort hash keys before output
-our $debug         = 0;
+our $debug         = 0; # Low level developer level debugging
+our $disable       = 0; # Disable Dump::Krumo
 
 my $current_indent_level = 0;
 our $indent_spaces       = 2;
@@ -47,6 +48,8 @@ my $left_pad_width = 0;
 # Dump the variable information
 sub kx {
 	my @arr = @_;
+
+	if ($disable) { return -1; }
 
 	my @items    = ();
 	my $cnt      = scalar(@arr);
@@ -763,6 +766,11 @@ Return a string instead of printing out
 =item C<$Dump::Krumo::indent_spaces = 2>
 
 Number of spaces to indent each level
+
+=item C<$Dump::Krumo::disable = 0>
+
+Disable all output from C<Dump::Krumo>. This allows you leave all your debug
+print statements in your code, and disable them at runtime as needed.
 
 =back
 

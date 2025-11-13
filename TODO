@@ -1,8 +1,6 @@
 TODO
 ====
 * NaN and INFINITY
-* Unit tests
-* Better handle string quoting ' vs "
 
 Done
 ====
@@ -16,3 +14,5 @@ Done
 * Add kxd()
 * Handle the width and include indentation
 * Consistent quoting for hash keys
+* Unit tests
+* Better handle string quoting ' vs "

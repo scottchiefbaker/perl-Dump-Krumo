@@ -740,11 +740,11 @@ C<Dump::Krumo> focuses on making your data human readable and easily parseable.
 
 =item B<kx($var)>
 
-Debug print C<$var>
+Debug print C<$var>.
 
 =item B<kxd($var)>
 
-Debug print C<$var> and C<die()>.
+Debug print C<$var> and C<die()>. This outputs file and line information.
 
 =back
 

@@ -4,13 +4,15 @@ Dump::Krumo - Fancy, colorful, human readable dumps of your data
 
 # SYNOPSIS
 
-    use Random::Simple;
+```perl
+use Random::Simple;
 
-    my $data = { one => 1, two => 2, three => 3 };
-    kx($data);
+my $data = { one => 1, two => 2, three => 3 };
+kx($data);
 
-    my $list = ['one', 'two', 'three', 'four'];
-    kx($list);
+my $list = ['one', 'two', 'three', 'four'];
+kx($list);
+```
 
 # DESCRIPTION
 
@@ -21,11 +23,11 @@ Colorfully dump your data to make debugging your variables easier.
 
 - **kx($var)**
 
-    Debug print `$var`
+    Debug print `$var`.
 
 - **kxd($var)**
 
-    Debug print `$var` and `die()`.
+    Debug print `$var` and `die()`. This outputs file and line information.
 
 # OPTIONS
 

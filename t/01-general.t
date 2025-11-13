@@ -19,8 +19,12 @@ is(kx(0)          , "0"         );
 is(kx('0')        , "0"         );
 
 # Array references
-is(kx([1,2,3])       , '[1, 2, 3]');
+is(kx([1,2,3])       , '[1, 2, 3]'     );
 is(kx(["one","two"]) , "['one', 'two']");
+is(kx( [ '' ] )      , "['']"          );
+is(kx( [ 0 ] )       , "[0]"           );
+is(kx( [ \0 ] )      , "[\\'0']"       ); # Scalar ref
+is(kx( [ undef ] )   , "[undef]"       );
 
 # Booleans
 is(kx(!!1) , 'true' );

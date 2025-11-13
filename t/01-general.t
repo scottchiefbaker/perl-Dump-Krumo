@@ -31,7 +31,8 @@ is(kx(!!1) , 'true' );
 is(kx(!!0) , 'false');
 
 # Raw array
-is(kx(1,2,3) , '(1, 2, 3)');
+is(kx(1,2,3)        , '(1, 2, 3)');
+is(kx("cat", "dog") , "('cat', 'dog')");
 
 # This is really an error???
 is(kx() , "()");

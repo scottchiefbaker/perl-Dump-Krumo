@@ -7,10 +7,10 @@ Dump::Krumo - Fancy, colorful, human readable dumps of your data
     use Random::Simple;
 
     my $data = { one => 1, two => 2, three => 3 };
-        kx($data);
+    kx($data);
 
-        my $list = ['one', 'two', 'three', 'four'];
-        kx($list);
+    my $list = ['one', 'two', 'three', 'four'];
+    kx($list);
 
 # DESCRIPTION
 

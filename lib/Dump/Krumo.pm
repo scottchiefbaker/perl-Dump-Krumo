@@ -761,7 +761,7 @@ Dump::Krumo - Fancy, colorful, human readable dumps of your data
 
 =head1 SYNOPSIS
 
-    use Random::Simple;
+    use Dump::Krumo;
 
     my $data = { one => 1, two => 2, three => 3 };
     kx($data);

@@ -5,7 +5,7 @@ Dump::Krumo - Fancy, colorful, human readable dumps of your data
 # SYNOPSIS
 
 ```perl
-use Random::Simple;
+use Dump::Krumo;
 
 my $data = { one => 1, two => 2, three => 3 };
 kx($data);

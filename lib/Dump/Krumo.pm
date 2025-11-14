@@ -775,6 +775,14 @@ Dump::Krumo - Fancy, colorful, human readable dumps of your data
 Colorfully dump your data to make debugging your variables easier.
 C<Dump::Krumo> focuses on making your data human readable and easily parseable.
 
+=begin markdown
+
+# SCREENSHOTS
+
+<img width="1095" height="878" alt="dk-ss" src="https://github.com/user-attachments/assets/b7138f3d-3144-4b1a-a063-9ca445dd34d4" />
+
+=end markdown
+
 =head1 METHODS
 
 =over 4

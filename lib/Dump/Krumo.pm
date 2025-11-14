@@ -18,9 +18,12 @@ our $return_string = 0; # Return a string instead of printing it
 our $hash_sort     = 1; # Sort hash keys before output
 our $debug         = 0; # Low level developer level debugging
 our $disable       = 0; # Disable Dump::Krumo
+our $indent_spaces = 2; # Number of spaces to use for each level of indent
 
+# Global var to track how many levels we're indented
 my $current_indent_level = 0;
-our $indent_spaces       = 2;
+# Global var to track the indent to the right end of the most recent hash key
+my $left_pad_width       = 0;
 
 our $COLORS = {
 	'string'       => 230, # Standard strings
@@ -42,9 +45,6 @@ our $COLORS = {
 
 my $WIDTH = get_terminal_width();
 $WIDTH  ||= 100;
-
-# Global var to track the indent to the right end of the most recent hash key
-my $left_pad_width = 0;
 
 ###############################################################################
 ###############################################################################
@@ -105,6 +105,7 @@ sub kxd {
 	exit(15);
 }
 
+# Generic dump that handles each type appropriately
 sub __dump {
 	my $x     = shift();
 	my $type  = ref($x);

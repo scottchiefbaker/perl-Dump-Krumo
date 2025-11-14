@@ -819,8 +819,8 @@ Number of spaces to indent each level
 
 =item C<$Dump::Krumo::disable = 0>
 
-Disable all output from C<Dump::Krumo>. This allows you leave all your debug
-print statements in your code, and disable them at runtime as needed.
+Disable all output from C<Dump::Krumo>. This allows you to leave all of your
+debug print statements in your code, and disable them at runtime as needed.
 
 =back
 

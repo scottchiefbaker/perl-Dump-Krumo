@@ -49,8 +49,8 @@ focuses on making your data human readable and easily parseable.
 
 - `$Dump::Krumo::disable = 0`
 
-    Disable all output from `Dump::Krumo`. This allows you leave all your debug
-    print statements in your code, and disable them at runtime as needed.
+    Disable all output from `Dump::Krumo`. This allows you to leave all of your
+    debug print statements in your code, and disable them at runtime as needed.
 
 # SEE ALSO
 

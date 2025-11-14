@@ -236,6 +236,10 @@ sub __dump_vstring {
 sub __dump_string {
 	my $x = shift();
 
+	if (length($x) == 0) {
+		return color($COLORS->{empty_braces}, "''"),
+	}
+
 	my $printable = is_printable($x);
 
 	# Convert all \n to printable version

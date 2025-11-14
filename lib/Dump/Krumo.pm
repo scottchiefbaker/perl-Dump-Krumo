@@ -147,6 +147,7 @@ sub __dump {
 }
 
 ################################################################################
+# Each variable type gets it's own dump function
 ################################################################################
 
 sub __dump_bool {
@@ -281,13 +282,6 @@ sub __dump_string {
 	$ret =~ s/\n/$slash_n/g;
 	$ret =~ s/\r/$slash_r/g;
 	$ret =~ s/\t/$slash_t/g;
-
-	return $ret;
-}
-
-sub bin2hex {
-	my $bytes = shift();
-	my $ret   = uc(unpack("H*", $bytes));
 
 	return $ret;
 }
@@ -427,6 +421,11 @@ sub __dump_hash {
 	return $ret;
 }
 
+################################################################################
+# Various helper functions
+################################################################################
+
+# Calculate the length of the longest string in an array
 sub max_length {
 	my $max = 0;
 
@@ -440,6 +439,7 @@ sub max_length {
 	return $max;
 }
 
+# Calculate the length in chars of this array
 sub array_str_len {
 	my @arr = @_;
 
@@ -467,6 +467,7 @@ sub array_str_len {
 	return $len;
 }
 
+# Calculate if this data structure will wrap the screen and needs to be in column mode instead
 sub needs_column_mode {
 	my $x = shift();
 
@@ -531,6 +532,19 @@ sub needs_column_mode {
 	return $ret;
 }
 
+# Convert raw bytes to hex for easier printing
+sub bin2hex {
+	my $bytes = shift();
+	my $ret   = uc(unpack("H*", $bytes));
+
+	return $ret;
+}
+
+################################################################################
+# Test functions to determine what type of variable something is
+################################################################################
+
+# Does the string contain only printable characters
 sub is_printable {
 	my ($str) = @_;
 
@@ -545,9 +559,6 @@ sub is_printable {
 
 	return $ret;
 }
-
-################################################################################
-################################################################################
 
 sub is_undef {
 	my $x = shift();

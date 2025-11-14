@@ -23,20 +23,20 @@ my $current_indent_level = 0;
 our $indent_spaces       = 2;
 
 our $COLORS = {
-	'string'       => 230,
-	'control_char' => 226,
-	'undef'        => 196,
-	'hash_key'     => 208,
-	'integer'      => 33,
-	'float'        => 51,
-	'class'        => 118,
-	'binary'       => 111,
-	'scalar_ref'   => 225,
-	'boolean'      => 141,
-	'regexp'       => 164,
-	'glob'         => 40,
-	'coderef'      => 168,
-	'vstring'      => 153,
+	'string'       => 230, # Standard strings
+	'control_char' => 226, # the `\n`, `\r`, and `\t` inside strings
+	'undef'        => 196, # undef
+	'hash_key'     => 208, # hash keys on the left of =>
+	'integer'      => 33,  # integers
+	'float'        => 51,  # things that look like floating point
+	'class'        => 118, # Classes/Object names
+	'binary'       => 111, # Strings that contain non-printable chars
+	'scalar_ref'   => 225, # References to scalar variables
+	'boolean'      => 141, # Native boolean types
+	'regexp'       => 164, # qr() style regexp variables
+	'glob'         => 40,  # \*STDOUT variables
+	'coderef'      => 168, # code references
+	'vstring'      => 153, # Version strings
 };
 
 my $WIDTH = get_terminal_width();

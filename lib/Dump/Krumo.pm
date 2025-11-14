@@ -37,6 +37,7 @@ our $COLORS = {
 	'glob'         => 40,  # \*STDOUT variables
 	'coderef'      => 168, # code references
 	'vstring'      => 153, # Version strings
+	'empty_braces' => 15,  # Either [] or {}
 };
 
 my $WIDTH = get_terminal_width();
@@ -305,7 +306,7 @@ sub __dump_array {
 	my $cnt = scalar(@$x);
 	if ($cnt == 0) {
 		$current_indent_level--;
-		return '[]',
+		return color($COLORS->{empty_braces}, '[]'),
 	}
 
 	# See if we need to switch to column mode to output this array
@@ -352,7 +353,7 @@ sub __dump_hash {
 
 	if ($cnt == 0) {
 		$current_indent_level--;
-		return '{}',
+		return color($COLORS->{empty_braces}, '{}'),
 	}
 
 	# See if we need to switch to column mode to output this array

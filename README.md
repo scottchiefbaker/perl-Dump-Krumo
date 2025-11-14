@@ -11,13 +11,13 @@ my $data = { one => 1, two => 2, three => 3 };
 kx($data);
 
 my $list = ['one', 'two', 'three', 'four'];
-kx($list);
+kxd($list);
 ```
 
 # DESCRIPTION
 
-Colorfully dump your data to make debugging your variables easier.
-`Dump::Krumo` focuses on making your data human readable and easily parseable.
+Colorfully dump your data to make debugging variables easier. `Dump::Krumo`
+focuses on making your data human readable and easily parseable.
 
 # SCREENSHOTS
 

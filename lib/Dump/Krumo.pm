@@ -772,12 +772,12 @@ Dump::Krumo - Fancy, colorful, human readable dumps of your data
     kx($data);
 
     my $list = ['one', 'two', 'three', 'four'];
-    kx($list);
+    kxd($list);
 
 =head1 DESCRIPTION
 
-Colorfully dump your data to make debugging your variables easier.
-C<Dump::Krumo> focuses on making your data human readable and easily parseable.
+Colorfully dump your data to make debugging variables easier. C<Dump::Krumo>
+focuses on making your data human readable and easily parseable.
 
 =begin markdown
 

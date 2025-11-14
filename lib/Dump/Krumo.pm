@@ -11,7 +11,7 @@ use Exporter 'import';
 our @EXPORT  = qw(kx kxd);
 
 # https://blogs.perl.org/users/grinnz/2018/04/a-guide-to-versions-in-perl.html
-our $VERSION = 'v0.1.2';
+our $VERSION = 'v0.1.3';
 
 our $use_color     = 1; # Output in color
 our $return_string = 0; # Return a string instead of printing it

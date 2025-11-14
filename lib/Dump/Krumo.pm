@@ -630,15 +630,6 @@ sub is_bool_val {
 
 ################################################################################
 
-sub trim {
-	my ($s) = (@_, $_); # Passed in var, or default to $_
-	if (!defined($s) || length($s) == 0) { return ""; }
-	$s =~ s/^\s*//;
-	$s =~ s/\s*$//;
-
-	return $s;
-}
-
 # String format: '115', '165_bold', '10_on_140', 'reset', 'on_173', 'red', 'white_on_blue'
 sub color {
     my ($str, $txt) = @_;
@@ -672,36 +663,6 @@ sub color {
     return $ret;
 }
 
-sub file_get_contents {
-	open(my $fh, "<", $_[0]) or return undef;
-	binmode($fh, ":encoding(UTF-8)");
-
-	my $array_mode = ($_[1]) || (!defined($_[1]) && wantarray);
-
-	if ($array_mode) { # Line mode
-		my @lines  = readline($fh);
-
-		# Right trim all lines
-		foreach my $line (@lines) { $line =~ s/[\r\n]+$//; }
-
-		return @lines;
-	} else { # String mode
-		local $/       = undef; # Input rec separator (slurp)
-		return my $ret = readline($fh);
-	}
-}
-
-sub file_put_contents {
-	my ($file, $data) = @_;
-
-	open(my $fh, ">", $file) or return undef;
-	binmode($fh, ":encoding(UTF-8)");
-	print $fh $data;
-	close($fh);
-
-	return length($data);
-}
-
 sub get_terminal_width {
 	# If there is no $TERM then tput will bail out
 	if (!$ENV{TERM} || -t STDOUT == 0) {
@@ -719,14 +680,6 @@ sub get_terminal_width {
 	}
 
 	return $width;
-}
-
-# Return bool if a function exists. Example: has_function("builtin::is_bool")
-sub has_function {
-	my $func_name = shift();
-	my $ret       = int(exists &$func_name);
-
-	return $ret;
 }
 
 # See also B::perlstring as a possible alternative

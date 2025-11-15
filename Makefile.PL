@@ -23,8 +23,8 @@ my %WriteMakefileArgs = (
         'meta-spec' => { version => 2 },
         resources => {
             repository => {
-                url => '',
-                web => '',
+                url => 'https://github.com/scottchiefbaker/perl-Dump-Krumo.git',
+                web => 'https://github.com/scottchiefbaker/perl-Dump-Krumo/',
                 type => 'git'
             }
         }

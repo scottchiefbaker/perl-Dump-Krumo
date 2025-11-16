@@ -260,13 +260,13 @@ sub __dump_string {
 			my $is_printable = is_printable(chr($x));
 
 			if ($is_printable) {
-				$str .= chr($x);
+				$str .= color($COLORS->{string},chr($x));
 			} else {
-				$str .= '\\x{' . sprintf("%02X", $x) . '}';
+				$str .= color($COLORS->{binary}, '\\x{' . sprintf("%02X", $x) . '}');
 			}
 		}
 
-		$ret = color($COLORS->{binary}, "\"$str\"");
+		$ret = "\"$str\"";
 	# Longer unprintable stuff we just spit out the raw HEX
 	} elsif (!$printable) {
 		$ret = color($COLORS->{binary}, 'pack("H*", ' . bin2hex($x) . ")");

@@ -118,7 +118,7 @@ sub __dump {
 	} elsif ($type eq 'HASH') {
 		$ret = __dump_hash($x);
 	} elsif ($type eq 'SCALAR') {
-		$ret = color($COLORS->{scalar_ref}, '\\' . quote_string($$x));
+		$ret = color(get_color('scalar_ref'), '\\' . quote_string($$x));
 	} elsif (!$type && is_bool_val($x)) {
 		$ret = __dump_bool($x);
 	} elsif (!$type && is_integer($x)) {
@@ -155,9 +155,9 @@ sub __dump_bool {
 	my $ret;
 
 	if ($x) {
-		$ret = color($COLORS->{boolean}, "true");
+		$ret = color(get_color('boolean'), "true");
 	} else {
-		$ret = color($COLORS->{boolean}, "false");
+		$ret = color(get_color('boolean'), "false");
 	}
 
 	return $ret;
@@ -166,7 +166,7 @@ sub __dump_bool {
 sub __dump_regexp {
 	my ($class, $x) = @_;
 
-	my $ret = color($COLORS->{regexp}, "qr$x");
+	my $ret = color(get_color('regexp'), "qr$x");
 
 	return $ret;
 }
@@ -174,7 +174,7 @@ sub __dump_regexp {
 sub __dump_coderef {
 	my ($class, $x) = @_;
 
-	my $ret = color($COLORS->{coderef}, "sub { ... }");
+	my $ret = color(get_color('coderef'), "sub { ... }");
 
 	return $ret;
 }
@@ -182,7 +182,7 @@ sub __dump_coderef {
 sub __dump_glob {
 	my ($class, $x) = @_;
 
-	my $ret = color($COLORS->{glob}, "\\" . $$x);
+	my $ret = color(get_color('glob'), "\\" . $$x);
 
 	return $ret;
 }
@@ -190,7 +190,7 @@ sub __dump_glob {
 sub __dump_class {
 	my ($class, $x) = @_;
 
-	my $ret      = '"' . color($COLORS->{class}, $class) . "\" :: ";
+	my $ret      = '"' . color(get_color('class'), $class) . "\" :: ";
 	my $reftype  = Scalar::Util::reftype($x);
 	my $y;
 
@@ -212,14 +212,14 @@ sub __dump_class {
 
 sub __dump_integer {
 	my $x   = shift();
-	my $ret = color($COLORS->{integer}, $x);
+	my $ret = color(get_color('integer'), $x);
 
 	return $ret;
 }
 
 sub __dump_float {
 	my $x   = shift();
-	my $ret = color($COLORS->{float}, $x);
+	my $ret = color(get_color('float'), $x);
 
 	return $ret;
 }
@@ -230,7 +230,7 @@ sub __dump_vstring {
 	my @parts = unpack("C*", $$x);
 	my $str   = "\\v" .(join ".", @parts);
 
-	my $ret = color($COLORS->{vstring}, $str);
+	my $ret = color(get_color('vstring'), $str);
 
 	return $ret;
 }
@@ -239,15 +239,15 @@ sub __dump_string {
 	my $x = shift();
 
 	if (length($x) == 0) {
-		return color($COLORS->{empty_braces}, "''"),
+		return color(get_color('empty_braces'), "''"),
 	}
 
 	my $printable = is_printable($x);
 
 	# Convert all \n to printable version
-	my $slash_n = color($COLORS->{control_char}, '\\n') . color($COLORS->{string});
-	my $slash_r = color($COLORS->{control_char}, '\\r') . color($COLORS->{string});
-	my $slash_t = color($COLORS->{control_char}, '\\t') . color($COLORS->{string});
+	my $slash_n = color(get_color('control_char'), '\\n') . color(get_color('string'));
+	my $slash_r = color(get_color('control_char'), '\\r') . color(get_color('string'));
+	my $slash_t = color(get_color('control_char'), '\\t') . color(get_color('string'));
 
 	my $ret = '';
 
@@ -260,23 +260,23 @@ sub __dump_string {
 			my $is_printable = is_printable(chr($x));
 
 			if ($is_printable) {
-				$str .= color($COLORS->{string},chr($x));
+				$str .= color(get_color('string'),chr($x));
 			} else {
-				$str .= color($COLORS->{binary}, '\\x{' . sprintf("%02X", $x) . '}');
+				$str .= color(get_color('binary'), '\\x{' . sprintf("%02X", $x) . '}');
 			}
 		}
 
 		$ret = "\"$str\"";
 	# Longer unprintable stuff we just spit out the raw HEX
 	} elsif (!$printable) {
-		$ret = color($COLORS->{binary}, 'pack("H*", ' . bin2hex($x) . ")");
+		$ret = color(get_color('binary'), 'pack("H*", ' . bin2hex($x) . ")");
 	# If it's a simple string we single quote it
 	} elsif ($x =~ /^[\w .,":;?!#\$%^*&\/=-]*$/g) {
-		$ret = "'" . color($COLORS->{string}, "$x") . "'";
+		$ret = "'" . color(get_color('string'), "$x") . "'";
 	# Otherwise we clean it up and then double quote it
 	} else {
 		# Do some clean up here?
-		$ret = '"' . color($COLORS->{string}, "$x") . '"';
+		$ret = '"' . color(get_color('string'), "$x") . '"';
 	}
 
 	$ret =~ s/\n/$slash_n/g;
@@ -287,7 +287,7 @@ sub __dump_string {
 }
 
 sub __dump_undef {
-	my $ret = color($COLORS->{undef}, 'undef');
+	my $ret = color(get_color('undef'), 'undef');
 
 	return $ret;
 }
@@ -305,7 +305,7 @@ sub __dump_array {
 	my $cnt = scalar(@$x);
 	if ($cnt == 0) {
 		$current_indent_level--;
-		return color($COLORS->{empty_braces}, '[]'),
+		return color(get_color('empty_braces'), '[]'),
 	}
 
 	# See if we need to switch to column mode to output this array
@@ -352,7 +352,7 @@ sub __dump_hash {
 
 	if ($cnt == 0) {
 		$current_indent_level--;
-		return color($COLORS->{empty_braces}, '{}'),
+		return color(get_color('empty_braces'), '{}'),
 	}
 
 	# See if we need to switch to column mode to output this array
@@ -380,9 +380,9 @@ sub __dump_hash {
 
 		my $key_str = '';
 		if ($keys_need_quotes) {
-			$key_str = "'" . color($COLORS->{hash_key}, $key) . "'";
+			$key_str = "'" . color(get_color('hash_key'), $key) . "'";
 		} else {
-			$key_str = color($COLORS->{hash_key}, $key);
+			$key_str = color(get_color('hash_key'), $key);
 		}
 
 		# Align the hash keys
@@ -702,6 +702,14 @@ sub quote_string {
 	$escaped =~ s/\b/\\b/g;
 
 	return "\"$escaped\"";
+}
+
+sub get_color {
+	my $str = $_[0] || "";
+
+	my $ret = $COLORS->{$str} // 251;
+
+	return $ret;
 }
 
 # Creates methods k() and kd() to print, and print & die respectively

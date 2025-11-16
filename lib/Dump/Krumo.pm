@@ -634,8 +634,10 @@ sub is_bool_val {
 sub color {
     my ($str, $txt) = @_;
 
+	state $should_use_color = (!$use_color || -t STDOUT == 0);
+
     # If we're NOT connected to a an interactive terminal don't do color
-    if (!$use_color || -t STDOUT == 0) { return $txt // ""; }
+    if ($should_use_color) { return $txt // ""; }
 
     # No string sent in, so we just reset
     if (!length($str) || $str eq 'reset') { return "\e[0m"; }

@@ -355,10 +355,15 @@ sub __dump_hash {
 		return color(get_color('empty_braces'), '{}'),
 	}
 
+	my $key_len = 0;
+	foreach my $x (@keys) {
+		$key_len += length($x) + 4; # Add four for ' => '
+	}
+
 	# See if we need to switch to column mode to output this array
 	my $max_length  = max_length(@keys);
 	$left_pad_width = $max_length;
-	my $column_mode = needs_column_mode($x);
+	my $column_mode = needs_column_mode($x, $key_len);
 
 	# If we're not in column mode there is no need to compensate for this
 	if (!$column_mode) {
@@ -473,7 +478,8 @@ sub array_str_len {
 
 # Calculate if this data structure will wrap the screen and needs to be in column mode instead
 sub needs_column_mode {
-	my $x = shift();
+	my ($x, $extra_len) = @_;
+	$extra_len        //= 0;
 
 	my $ret  = 0;
 	my $len  = 0;
@@ -511,7 +517,7 @@ sub needs_column_mode {
 	my $pad_width    = $left_pad_width + 4; # For the ' => '
 
 	# Add it all together
-	$len = $left_indent + $pad_width + $len;
+	$len = $left_indent + $pad_width + $len + $extra_len;
 
 	# If we're too wide for the screen we drop to column mode
 	# Our math isn't 100% down the character so we use 97% to give
@@ -527,10 +533,11 @@ sub needs_column_mode {
 
 		if ($first) {
 			printf("Screen width: %d\n\n", $WIDTH * .97);
-			printf("Left Indent | Hash Padding | Content | Total\n");
+			printf("Left Indent | Hash Padding | Content | Extra | Total\n");
 			$first = 0;
 		}
-		printf("%8d    +    %6d    +  %4d   = %4d    (%d)\n", $left_indent, $pad_width, $content_len, $len, $ret);
+
+		printf("%8d    +    %6d    +  %4d   + %4d  = %4d    (%d)\n", $left_indent, $pad_width, $content_len, $extra_len, $len, $ret);
 	}
 
 	return $ret;

@@ -26,21 +26,21 @@ my $current_indent_level = 0;
 my $left_pad_width       = 0;
 
 our $COLORS = {
-	'string'       => 230, # Standard strings
-	'control_char' => 226, # the `\n`, `\r`, and `\t` inside strings
-	'undef'        => 196, # undef
-	'hash_key'     => 208, # hash keys on the left of =>
-	'integer'      => 33,  # integers
-	'float'        => 51,  # things that look like floating point
-	'class'        => 118, # Classes/Object names
-	'binary'       => 226, # Strings that contain non-printable chars
-	'scalar_ref'   => 225, # References to scalar variables
-	'boolean'      => 141, # Native boolean types
-	'regexp'       => 164, # qr() style regexp variables
-	'glob'         => 40,  # \*STDOUT variables
-	'coderef'      => 168, # code references
-	'vstring'      => 153, # Version strings
-	'empty_braces' => 15,  # Either [] or {}
+	'string'       => 230,       # Standard strings
+	'control_char' => 226,       # the `\n`, `\r`, and `\t` inside strings
+	'undef'        => 196,       # undef
+	'hash_key'     => 208,       # hash keys on the left of =>
+	'integer'      => 33,        # integers
+	'float'        => 51,        # things that look like floating point
+	'class'        => 118,       # Classes/Object names
+	'binary'       => 226,       # Strings that contain non-printable chars
+	'scalar_ref'   => 225,       # References to scalar variables
+	'boolean'      => 141,       # Native boolean types
+	'regexp'       => 164,       # qr() style regexp variables
+	'glob'         => 40,        # \*STDOUT variables
+	'coderef'      => 168,       # code references
+	'vstring'      => 153,       # Version strings
+	'empty_braces' => '15_bold', # Either [] or {}
 };
 
 my $WIDTH = get_terminal_width();

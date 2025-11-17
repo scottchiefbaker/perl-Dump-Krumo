@@ -451,6 +451,10 @@ sub array_str_len {
 			$len += array_str_len(@$x);
 		} elsif (ref $x eq 'HASH') {
 			$len += array_str_len(%$x);
+		} elsif (is_bool_val($x) && $x) {
+			$len += 6; # 'true'
+		} elsif (is_bool_val($x)) {
+			$len += 7; # 'false'
 		} else {
 			$len += length($x);
 			$len += 2; # For the quotes around the string

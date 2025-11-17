@@ -52,6 +52,11 @@ focuses on making your data human readable and easily parseable.
     Disable all output from `Dump::Krumo`. This allows you to leave all of your
     debug print statements in your code, and disable them at runtime as needed.
 
+- `$Dump::Krumo::COLORS`
+
+    Reference to a hash of colors for each variable type. Update this and create
+    your own color scheme.
+
 # SEE ALSO
 
 - [Data::Dumper](https://metacpan.org/pod/Data%3A%3ADumper)

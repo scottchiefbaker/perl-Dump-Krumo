@@ -808,6 +808,11 @@ Number of spaces to indent each level
 Disable all output from C<Dump::Krumo>. This allows you to leave all of your
 debug print statements in your code, and disable them at runtime as needed.
 
+=item C<$Dump::Krumo::COLORS>
+
+Reference to a hash of colors for each variable type. Update this and create
+your own color scheme.
+
 =back
 
 =head1 SEE ALSO

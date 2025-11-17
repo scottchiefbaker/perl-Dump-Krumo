@@ -37,7 +37,7 @@ focuses on making your data human readable and easily parseable.
 
 - `$Dump::Krumo::use_color = 1`
 
-    Turn on/off color
+    Turn color on/off
 
 - `$Dump::Krumo::return_string = 0`
 

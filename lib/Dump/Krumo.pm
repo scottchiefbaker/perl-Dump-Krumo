@@ -782,7 +782,7 @@ Debug print C<$var> and C<die()>. This outputs file and line information.
 
 =item C<$Dump::Krumo::use_color = 1>
 
-Turn on/off color
+Turn color on/off
 
 =item C<$Dump::Krumo::return_string = 0>
 

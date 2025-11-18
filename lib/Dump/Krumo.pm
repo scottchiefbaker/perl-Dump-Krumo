@@ -19,6 +19,7 @@ our $hash_sort     = 1; # Sort hash keys before output
 our $debug         = 0; # Low level developer level debugging
 our $disable       = 0; # Disable Dump::Krumo
 our $indent_spaces = 2; # Number of spaces to use for each level of indent
+our $promote_bool  = 1; # Convert JSON::PP::Boolean to raw true/false
 
 # Global var to track how many levels we're indented
 my $current_indent_level = 0;
@@ -193,6 +194,11 @@ sub __dump_class {
 	my $ret      = '"' . color(get_color('class'), $class) . "\" :: ";
 	my $reftype  = Scalar::Util::reftype($x);
 	my $y;
+
+	if ($promote_bool && $class eq 'JSON::PP::Boolean') {
+		my $val = $$x;
+		return __dump_bool(!!$val);
+	}
 
 	my $len = length($class) + 6; # 2x quotes and ' :: '
 	$left_pad_width += $len;
@@ -821,6 +827,10 @@ Number of spaces to indent each level
 
 Disable all output from C<Dump::Krumo>. This allows you to leave all of your
 debug print statements in your code, and disable them at runtime as needed.
+
+=item C<$Dump::Krumo::promote_bool = 1>
+
+Convert JSON::PP::Booleans to true/false instead of treating them as objects.
 
 =item C<$Dump::Krumo::COLORS>
 

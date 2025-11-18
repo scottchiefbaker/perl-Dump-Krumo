@@ -52,6 +52,10 @@ focuses on making your data human readable and easily parseable.
     Disable all output from `Dump::Krumo`. This allows you to leave all of your
     debug print statements in your code, and disable them at runtime as needed.
 
+- `$Dump::Krumo::promote_bool = 1`
+
+    Convert JSON::PP::Booleans to true/false instead of treating them as objects.
+
 - `$Dump::Krumo::COLORS`
 
     Reference to a hash of colors for each variable type. Update this and create

@@ -194,6 +194,9 @@ sub __dump_class {
 	my $reftype  = Scalar::Util::reftype($x);
 	my $y;
 
+	my $len = length($class) + 6; # 2x quotes and ' :: '
+	$left_pad_width += $len;
+
 	# We need an unblessed copy of the data so we can display it
 	if ($reftype eq 'ARRAY') {
 		$y = [@$x];
@@ -206,6 +209,8 @@ sub __dump_class {
 	}
 
 	$ret .= __dump($y);
+
+	$left_pad_width -= $len;
 
 	return $ret;
 }
@@ -462,7 +467,10 @@ sub array_str_len {
 			$len += 7; # 'false'
 		} else {
 			$len += length($x);
-			$len += 2; # For the quotes around the string
+
+			if (!is_numeric($x)) {
+				$len += 2; # For the quotes around the string
+			}
 		}
 
 		# We stop counting after we hit $WIDTH so we don't

@@ -639,6 +639,12 @@ sub is_bool_val {
 	return 0;
 }
 
+sub is_numeric {
+	my $ret = Scalar::Util::looks_like_number($_[0]);
+
+	return $ret;
+}
+
 ################################################################################
 
 # String format: '115', '165_bold', '10_on_140', 'reset', 'on_173', 'red', 'white_on_blue'

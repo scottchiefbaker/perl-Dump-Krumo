@@ -88,7 +88,7 @@ sub kx {
 	}
 
 	if ($return_string) {
-		return "$str";
+		return $str;
 	} else {
 		print "$str\n";
 	}

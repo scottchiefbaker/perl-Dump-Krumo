@@ -620,19 +620,19 @@ sub is_infinity {
 }
 
 sub is_string {
-    my ($value) = @_;
-    return defined($value) && $value !~ /^-?\d+(?:\.\d+)?$/;
+	my ($value) = @_;
+	return defined($value) && $value !~ /^-?\d+(?:\.\d+)?$/;
 }
 
 sub is_integer {
-    my ($value) = @_;
-    return defined($value) && $value =~ /^-?\d+$/;
+	my ($value) = @_;
+	return defined($value) && $value =~ /^-?\d+$/;
 }
 
 sub is_float {
-    my ($value) = @_;
-    #my $ret     = defined($value) && $value =~ /^-?\d+\.\d+$/;
-    my $ret     = defined($value) && $value =~ /^-?\d+\.\d+(e[+-]\d+)?$/;
+	my ($value) = @_;
+	#my $ret     = defined($value) && $value =~ /^-?\d+\.\d+$/;
+	my $ret     = defined($value) && $value =~ /^-?\d+\.\d+(e[+-]\d+)?$/;
 
 	return $ret;
 }

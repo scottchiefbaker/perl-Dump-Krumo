@@ -663,37 +663,38 @@ sub is_numeric {
 
 # String format: '115', '165_bold', '10_on_140', 'reset', 'on_173', 'red', 'white_on_blue'
 sub color {
-    my ($str, $txt) = @_;
+	my ($str, $txt) = @_;
 
-	state $should_use_color = (!$use_color || -t STDOUT == 0);
+	# If we're NOT connected to a an interactive terminal don't do color
+	state $color_available = (!$use_color || -t STDOUT == 0);
+	if ($color_available) {
+		return $txt // "";
+	}
 
-    # If we're NOT connected to a an interactive terminal don't do color
-    if ($should_use_color) { return $txt // ""; }
+	# No string sent in, so we just reset
+	if (!length($str) || $str eq 'reset') { return "\e[0m"; }
 
-    # No string sent in, so we just reset
-    if (!length($str) || $str eq 'reset') { return "\e[0m"; }
+	# Some predefined colors
+	my %color_map = qw(red 160 blue 27 green 34 yellow 226 orange 214 purple 93 white 15 black 0);
+	$str =~ s|([A-Za-z]+)|$color_map{$1} // $1|eg;
 
-    # Some predefined colors
-    my %color_map = qw(red 160 blue 27 green 34 yellow 226 orange 214 purple 93 white 15 black 0);
-    $str =~ s|([A-Za-z]+)|$color_map{$1} // $1|eg;
+	# Get foreground/background and any commands
+	my ($fc,$cmd) = $str =~ /^(\d{1,3})?_?(\w+)?$/g;
+	my ($bc)      = $str =~ /on_(\d{1,3})$/g;
 
-    # Get foreground/background and any commands
-    my ($fc,$cmd) = $str =~ /^(\d{1,3})?_?(\w+)?$/g;
-    my ($bc)      = $str =~ /on_(\d{1,3})$/g;
+	if (defined($fc) && int($fc) > 255) { $fc = undef; } # above 255 is invalid
 
-    if (defined($fc) && int($fc) > 255) { $fc = undef; } # above 255 is invalid
+	# Some predefined commands
+	my %cmd_map = qw(bold 1 italic 3 underline 4 blink 5 inverse 7);
+	my $cmd_num = $cmd_map{$cmd // 0};
 
-    # Some predefined commands
-    my %cmd_map = qw(bold 1 italic 3 underline 4 blink 5 inverse 7);
-    my $cmd_num = $cmd_map{$cmd // 0};
+	my $ret = '';
+	if ($cmd_num)      { $ret .= "\e[${cmd_num}m"; }
+	if (defined($fc))  { $ret .= "\e[38;5;${fc}m"; }
+	if (defined($bc))  { $ret .= "\e[48;5;${bc}m"; }
+	if (defined($txt)) { $ret .= $txt . "\e[0m";   }
 
-    my $ret = '';
-    if ($cmd_num)      { $ret .= "\e[${cmd_num}m"; }
-    if (defined($fc))  { $ret .= "\e[38;5;${fc}m"; }
-    if (defined($bc))  { $ret .= "\e[48;5;${bc}m"; }
-    if (defined($txt)) { $ret .= $txt . "\e[0m";   }
-
-    return $ret;
+	return $ret;
 }
 
 sub get_terminal_width {

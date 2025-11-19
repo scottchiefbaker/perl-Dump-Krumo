@@ -34,14 +34,14 @@ our $COLORS = {
 	'integer'      => 33,        # integers
 	'float'        => 51,        # things that look like floating point
 	'class'        => 118,       # Classes/Object names
-	'binary'       => 226,       # Strings that contain non-printable chars
+	'binary'       => 226,       # \x{12} inside of strings
 	'scalar_ref'   => 225,       # References to scalar variables
 	'boolean'      => 141,       # Native boolean types
 	'regexp'       => 164,       # qr() style regexp variables
 	'glob'         => 40,        # \*STDOUT variables
 	'coderef'      => 168,       # code references
 	'vstring'      => 153,       # Version strings
-	'empty_braces' => '15_bold', # Either [] or {}
+	'empty_braces' => '15_bold', # Either [] or {} or ''
 };
 
 my $WIDTH = get_terminal_width();
@@ -54,6 +54,7 @@ $WIDTH  ||= 100;
 sub kx {
 	my @arr = @_;
 
+	# If we are globally disabled we do nothing
 	if ($disable) { return -1; }
 
 	my @items    = ();
@@ -79,8 +80,8 @@ sub kx {
 
 	# If it's a real array we remove the false [ ] added by __dump()
 	if ($is_array) {
-		my $len = length($str) - 2;
-		$str    = substr($str, 1, $len);
+		my $len = length($str);
+		$str    = substr($str, 1, $len - 2);
 	}
 
 	if ($cnt > 1 || $cnt == 0) {
@@ -249,10 +250,12 @@ sub __dump_vstring {
 sub __dump_string {
 	my $x = shift();
 
+	# This is the catch all for "" or ''
 	if (length($x) == 0) {
 		return color(get_color('empty_braces'), "''"),
 	}
 
+	# Is the whole string printable
 	my $printable = is_printable($x);
 
 	my $ret = '';
@@ -306,13 +309,9 @@ sub __dump_undef {
 sub __dump_array {
 	my $x = shift();
 
-	# If it's only a single element we return the stringified version of that
-	if (ref($x) ne 'ARRAY') {
-		return __dump("$x");
-	}
-
 	$current_indent_level++;
 
+	# Catch if it's an empty array
 	my $cnt = scalar(@$x);
 	if ($cnt == 0) {
 		$current_indent_level--;
@@ -322,6 +321,7 @@ sub __dump_array {
 	# See if we need to switch to column mode to output this array
 	my $column_mode = needs_column_mode($x);
 
+	# Loop through each item and dump it approprirately
 	my $ret = '';
 	my @items = ();
 	foreach my $z (@$x) {
@@ -356,14 +356,15 @@ sub __dump_hash {
 	my @vals  = values(%$x);
 	my $cnt   = scalar(@keys);
 
-	# There may be some weird scenario where we do NOT want to sort
-	if ($hash_sort) {
-		@keys = sort(@keys);
-	}
-
+	# Catch an empty hash like: {}
 	if ($cnt == 0) {
 		$current_indent_level--;
 		return color(get_color('empty_braces'), '{}'),
+	}
+
+	# There may be some weird scenario where we do NOT want to sort
+	if ($hash_sort) {
+		@keys = sort(@keys);
 	}
 
 	my $key_len = 0;
@@ -573,6 +574,8 @@ sub bin2hex {
 sub is_printable {
 	my ($str) = @_;
 
+	# If we're just checking a single char, anything out of the ASCII range is
+	# not considered printable
 	if (length($str) == 1 && (ord($str) >= 127)) {
 		return 0;
 	}
@@ -595,7 +598,7 @@ sub is_undef {
 	}
 }
 
-# Veriyf this
+# Verify this
 sub is_nan {
 	my $x   = shift();
 	my $ret = 0;
@@ -607,7 +610,7 @@ sub is_nan {
 	return $ret;
 }
 
-# Veriyf this
+# Verify this
 sub is_infinity {
 	my $x   = shift();
 	my $ret = 0;
@@ -621,17 +624,21 @@ sub is_infinity {
 
 sub is_string {
 	my ($value) = @_;
-	return defined($value) && $value !~ /^-?\d+(?:\.\d+)?$/;
+
+	# For our purposes it's considered a string if it doesn't look like a number
+	return defined($value) && !is_numeric($value);
 }
 
 sub is_integer {
 	my ($value) = @_;
+
 	return defined($value) && $value =~ /^-?\d+$/;
 }
 
 sub is_float {
 	my ($value) = @_;
-	#my $ret     = defined($value) && $value =~ /^-?\d+\.\d+$/;
+
+	# Note 1.2e+100 is considered a float along with the more common types
 	my $ret     = defined($value) && $value =~ /^-?\d+\.\d+(e[+-]\d+)?$/;
 
 	return $ret;
@@ -736,6 +743,7 @@ sub quote_string {
 	return "\"$escaped\"";
 }
 
+# This is used to look up the color for each type
 sub get_color {
 	my $str = $_[0] || "";
 

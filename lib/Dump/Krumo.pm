@@ -787,7 +787,7 @@ focuses on making your data human readable and easily parseable.
 
 # SCREENSHOTS
 
-<img width="1095" height="878" alt="dk-ss" src="https://github.com/user-attachments/assets/b7138f3d-3144-4b1a-a063-9ca445dd34d4" />
+<img width="1107" height="1024" alt="dk-ss" src="https://github.com/user-attachments/assets/5450fd83-95a3-4dfd-9a62-f6b05e176d5d" />
 
 =end markdown
 

@@ -8,6 +8,7 @@ use Term::ReadKey; # GetTerminalSize()
 
 package Dump::Krumo;
 
+use Carp;
 use Exporter 'import';
 our @EXPORT  = qw(kx kxd);
 
@@ -21,6 +22,7 @@ our $debug         = 0; # Low level developer level debugging
 our $disable       = 0; # Disable Dump::Krumo
 our $indent_spaces = 2; # Number of spaces to use for each level of indent
 our $promote_bool  = 1; # Convert JSON::PP::Boolean to raw true/false
+our $stack_trace   = 0; # kxd() prints a stack trace
 
 # Global var to track how many levels we're indented
 my $current_indent_level = 0;
@@ -100,12 +102,13 @@ sub kx {
 sub kxd {
 	kx(@_);
 
-	my @call = caller();
-	my $file = $call[1];
-	my $line = $call[2];
+	print "\n";
 
-	printf("\nDump::Krumo called from %s line %s\n", color('white', $file), color(194, "#$line"));
-	exit(15);
+	if ($stack_trace) {
+		confess("Dump::Krumo died");
+	} else {
+		croak("Dump::Krumo died");
+	}
 }
 
 # Generic dump that handles each type appropriately
@@ -829,6 +832,10 @@ debug print statements in your code, and disable them at runtime as needed.
 =item C<$Dump::Krumo::promote_bool = 1>
 
 Convert JSON::PP::Booleans to true/false instead of treating them as objects.
+
+=item C<$Dump::Krumo::stack_trace = 0>
+
+When C<kxd()> is called it will dump a full stack trace.
 
 =item C<$Dump::Krumo::COLORS>
 

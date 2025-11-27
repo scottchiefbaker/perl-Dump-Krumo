@@ -56,6 +56,10 @@ focuses on making your data human readable and easily parseable.
 
     Convert JSON::PP::Booleans to true/false instead of treating them as objects.
 
+- `$Dump::Krumo::stack_trace = 0`
+
+    When `kxd()` is called it will dump a full stack trace.
+
 - `$Dump::Krumo::COLORS`
 
     Reference to a hash of colors for each variable type. Update this and create

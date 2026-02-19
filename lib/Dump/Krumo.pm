@@ -294,10 +294,10 @@ sub __dump_string {
 	my $slash_t = color(get_color('control_char'), '\\t') . color(get_color('string'));
 	my $slash_f = color(get_color('control_char'), '\\f') . color(get_color('string'));
 
-	$ret =~ s/\n/$slash_n/g;
-	$ret =~ s/\r/$slash_r/g;
-	$ret =~ s/\t/$slash_t/g;
-	$ret =~ s/\t/$slash_f/g;
+	$ret =~ s/\\n/$slash_n/g;
+	$ret =~ s/\\r/$slash_r/g;
+	$ret =~ s/\\t/$slash_t/g;
+	$ret =~ s/\\t/$slash_f/g;
 
 	return $ret;
 }

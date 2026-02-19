@@ -283,23 +283,21 @@ sub __dump_string {
 	# Longer unprintable stuff we just spit out the raw HEX
 	} elsif (!$printable) {
 		$ret = color(get_color('binary'), 'pack("H*", ' . bin2hex($x) . ")");
-	# If it's a simple string we single quote it
-	} elsif ($x =~ /^[\w .,":;?!#\$%^*&\/=-]*$/g) {
-		$ret = "'" . color(get_color('string'), "$x") . "'";
-	# Otherwise we clean it up and then double quote it
 	} else {
-		# Do some clean up here?
-		$ret = '"' . color(get_color('string'), "$x") . '"';
+		my $quoted = quote_string($x);
+		$ret       = color(get_color('string'), $quoted);
 	}
 
-	# Convert all \n to printable version
+	# Convert special chars to printable version
 	my $slash_n = color(get_color('control_char'), '\\n') . color(get_color('string'));
 	my $slash_r = color(get_color('control_char'), '\\r') . color(get_color('string'));
 	my $slash_t = color(get_color('control_char'), '\\t') . color(get_color('string'));
+	my $slash_f = color(get_color('control_char'), '\\f') . color(get_color('string'));
 
 	$ret =~ s/\n/$slash_n/g;
 	$ret =~ s/\r/$slash_r/g;
 	$ret =~ s/\t/$slash_t/g;
+	$ret =~ s/\t/$slash_f/g;
 
 	return $ret;
 }
@@ -720,7 +718,7 @@ sub quote_string {
 	my ($s) = @_;
 
 	# Use single quotes if no special chars
-	if ($s !~ /[\'\\\n\r\t\f\b\$@"]/ ) {
+	if ($s !~ /[\'\\\n\r\t\f\$@]/ ) {
 		return "'$s'";
 	}
 
@@ -730,7 +728,6 @@ sub quote_string {
 	$escaped =~ s/\r/\\r/g;
 	$escaped =~ s/\t/\\t/g;
 	$escaped =~ s/\f/\\f/g;
-	$escaped =~ s/\b/\\b/g;
 
 	return "\"$escaped\"";
 }

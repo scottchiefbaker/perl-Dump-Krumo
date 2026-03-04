@@ -10,7 +10,12 @@ package Dump::Krumo;
 
 use Carp;
 use Exporter 'import';
-our @EXPORT  = qw(kx kxd);
+
+our @EXPORT    = qw(kx kxd);
+our @EXPORT_OK = qw(k kd);
+
+# If you `use Dump::Krumo (":short");` then you get k() and kd() instead
+our %EXPORT_TAGS = ('short' => [('k', 'kd')]);
 
 # https://blogs.perl.org/users/grinnz/2018/04/a-guide-to-versions-in-perl.html
 our $VERSION = 'v0.1.5';
@@ -667,6 +672,18 @@ sub is_numeric {
 
 	return $ret;
 }
+
+# This is a wrapper needed for :short
+sub k {
+	return kx(@_);
+}
+
+# This is a wrapper needed for :short
+sub kd {
+	return kxd(@_);
+}
+
+
 
 ################################################################################
 

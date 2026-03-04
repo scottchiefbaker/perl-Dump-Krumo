@@ -741,23 +741,6 @@ sub get_color {
 	return $ret;
 }
 
-# Creates methods k() and kd() to print, and print & die respectively
-BEGIN {
-	if (eval { require Data::Dump::Color }) {
-		*k = sub { Data::Dump::Color::dd(@_) };
-	} else {
-		require Data::Dumper;
-		*k = sub { print Data::Dumper::Dumper(\@_) };
-	}
-
-	sub kd {
-		k(@_);
-
-		printf("Died at %2\$s line #%3\$s\n",caller());
-		exit(15);
-	}
-}
-
 ################################################################################
 ################################################################################
 ################################################################################

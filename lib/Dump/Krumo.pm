@@ -113,10 +113,12 @@ sub kxd {
 
 	print "\n";
 
+	my $str = color('117', "Dump::Krumo") . " died";
+
 	if ($stack_trace) {
-		confess("Dump::Krumo died");
+		confess($str);
 	} else {
-		croak("Dump::Krumo died");
+		croak($str);
 	}
 }
 

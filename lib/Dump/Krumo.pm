@@ -35,21 +35,22 @@ my $current_indent_level = 0;
 my $left_pad_width       = 0;
 
 our $COLORS = {
-	'string'       => 230,       # Standard strings
-	'control_char' => 226,       # the `\n`, `\r`, and `\t` inside strings
-	'undef'        => 196,       # undef
-	'hash_key'     => 208,       # hash keys on the left of =>
-	'integer'      => 33,        # integers
-	'float'        => 51,        # things that look like floating point
-	'class'        => 118,       # Classes/Object names
-	'binary'       => 226,       # \x{12} inside of strings
-	'scalar_ref'   => 225,       # References to scalar variables
-	'boolean'      => 141,       # Native boolean types
-	'regexp'       => 164,       # qr() style regexp variables
-	'glob'         => 40,        # \*STDOUT variables
-	'coderef'      => 168,       # code references
-	'vstring'      => 153,       # Version strings
-	'empty_braces' => '15_bold', # Either [] or {} or ''
+	'string'        => 230,            # Standard strings
+	'control_char'  => 226,            # the `\n`, `\r`, and `\t` inside strings
+	'undef'         => 196,            # undef
+	'hash_key'      => 208,            # hash keys on the left of =>
+	'integer'       => 33,             # integers
+	'float'         => 51,             # things that look like floating point
+	'class'         => 118,            # Classes/Object names
+	'binary'        => 226,            # \x{12} inside of strings
+	'scalar_ref'    => 225,            # References to scalar variables
+	'boolean_false' => 'white_on_124', # Native boolean false
+	'boolean_true'  => 'white_on_22',  # Native boolean true
+	'regexp'        => 164,            # qr() style regexp variables
+	'glob'          => 40,             # \*STDOUT variables
+	'coderef'       => 168,            # code references
+	'vstring'       => 153,            # Version strings
+	'empty_braces'  => '15_bold',      # Either [] or {} or ''
 };
 
 my $WIDTH = get_terminal_width();
@@ -166,9 +167,9 @@ sub __dump_bool {
 	my $ret;
 
 	if ($x) {
-		$ret = color(get_color('boolean'), "true");
+		$ret = color(get_color('boolean_true'), "true");
 	} else {
-		$ret = color(get_color('boolean'), "false");
+		$ret = color(get_color('boolean_false'), "false");
 	}
 
 	return $ret;

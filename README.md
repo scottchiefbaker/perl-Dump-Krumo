@@ -1,8 +1,8 @@
-# NAME
+## Name
 
 Dump::Krumo - Fancy, colorful, human readable dumps of your data
 
-# SYNOPSIS
+## Synopsis
 
 ```perl
 use Dump::Krumo;
@@ -14,16 +14,16 @@ my $list = ['one', 'two', 'three', 'four'];
 kxd($list);
 ```
 
-# DESCRIPTION
+## Description
 
 Colorfully dump your data to make debugging variables easier. `Dump::Krumo`
 focuses on making your data human readable and easily parseable.
 
-# SCREENSHOTS
+## Screenshots
 
 <img width="1072" height="942" alt="image" src="https://github.com/user-attachments/assets/970932a4-21cb-4add-bf9d-f4a007435181" />
 
-# METHODS
+## Methods
 
 - **kx($var)**
 
@@ -33,7 +33,7 @@ focuses on making your data human readable and easily parseable.
 
     Debug print `$var` and `die()`. This outputs file and line information.
 
-# OPTIONS
+## Options
 
 - `$Dump::Krumo::use_color = 1`
 
@@ -65,13 +65,13 @@ focuses on making your data human readable and easily parseable.
     Reference to a hash of colors for each variable type. Update this and create
     your own color scheme.
 
-# SEE ALSO
+## See Also
 
 - [Data::Dumper](https://metacpan.org/pod/Data%3A%3ADumper)
 - [Data::Dump](https://metacpan.org/pod/Data%3A%3ADump)
 - [Data::Dump::Color](https://metacpan.org/pod/Data%3A%3ADump%3A%3AColor)
 - [Data::Printer](https://metacpan.org/pod/Data%3A%3APrinter)
 
-# AUTHOR
+## Author
 
 Scott Baker - [https://www.perturb.org/](https://www.perturb.org/)

@@ -106,6 +106,9 @@ sub kx {
 
 # Dump the variable and die and output file/line
 sub kxd {
+	# If we are globally disabled we do nothing
+	if ($disable) { return -1; }
+
 	kx(@_);
 
 	print "\n";

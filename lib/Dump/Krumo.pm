@@ -53,7 +53,7 @@ our $COLORS = {
 	'empty_braces'  => '15_bold',      # Either [] or {} or ''
 };
 
-my $WIDTH = get_terminal_width();
+our $WIDTH = get_terminal_width();
 $WIDTH  ||= 100;
 
 ###############################################################################

@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use v5.16;
 use Scalar::Util;
-use Term::ReadKey; # GetTerminalSize()
 
 package Dump::Krumo;
 
@@ -730,8 +729,8 @@ sub color {
 }
 
 sub get_terminal_width {
-	my @x      = Term::ReadKey::GetTerminalSize();
-	my $width  = $x[0] || 0;
+	my $width = $ENV{COLUMNS} || `tput cols`;
+	$width    = int($width)   || 80;
 
 	return $width;
 }

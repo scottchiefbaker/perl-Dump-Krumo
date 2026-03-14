@@ -17,7 +17,7 @@ our @EXPORT_OK = qw(k kd);
 our %EXPORT_TAGS = ('short' => [('k', 'kd')]);
 
 # https://blogs.perl.org/users/grinnz/2018/04/a-guide-to-versions-in-perl.html
-our $VERSION = 'v0.1.6';
+our $VERSION = 'v0.1.7';
 
 our $use_color     = 1; # Output in color
 our $return_string = 0; # Return a string instead of printing it

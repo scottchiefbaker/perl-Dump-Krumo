@@ -729,8 +729,20 @@ sub color {
 }
 
 sub get_terminal_width {
-	my $width = $ENV{COLUMNS} || `tput cols`;
-	$width    = int($width)   || 80;
+	# If there is no $TERM then tput will bail out
+	if (!$ENV{TERM} || -t STDOUT == 0) {
+		return 0;
+	}
+
+	my $tput  = `tput cols`;
+	my $width = 0;
+
+	if ($tput) {
+		$width = int($tput);
+	} else {
+		print color('orange', "Warning:") . " `tput cols` did not return numeric input\n";
+		$width = 80;
+	}
 
 	return $width;
 }

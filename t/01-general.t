@@ -20,6 +20,10 @@ is(kx('a"b')      , "'a\"b'"         );
 is(kx(0)          , "0"              );
 is(kx('0')        , "0"              );
 is(kx("1\x{0}2")  , '"1\x{00}2"'     ); # Null byte in the middle of a string
+is(kx("+9.3")     , '9.3'            );
+is(kx("-9.3")     , '-9.3'           );
+is(kx("+3")       , '3'              );
+is(kx("-3")       , '-3'             );
 
 # Regexps
 is(kx(qr((foo)?(bar))), 'qr(?^:(foo)?(bar))' );

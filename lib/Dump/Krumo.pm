@@ -238,14 +238,14 @@ sub __dump_class {
 
 sub __dump_integer {
 	my $x   = shift();
-	my $ret = color(get_color('integer'), $x);
+	my $ret = color(get_color('integer'), $x + 0);
 
 	return $ret;
 }
 
 sub __dump_float {
 	my $x   = shift();
-	my $ret = color(get_color('float'), $x);
+	my $ret = color(get_color('float'), $x + 0);
 
 	return $ret;
 }
@@ -644,14 +644,14 @@ sub is_string {
 sub is_integer {
 	my ($value) = @_;
 
-	return defined($value) && $value =~ /^-?\d+$/;
+	return defined($value) && $value =~ /^[+-]?\d+$/;
 }
 
 sub is_float {
 	my ($value) = @_;
 
 	# Note 1.2e+100 is considered a float along with the more common types
-	my $ret     = defined($value) && $value =~ /^-?\d+\.\d+(e[+-]\d+)?$/;
+	my $ret     = defined($value) && $value =~ /^[+-]?\d+\.\d+(e[+-]\d+)?$/;
 
 	return $ret;
 }

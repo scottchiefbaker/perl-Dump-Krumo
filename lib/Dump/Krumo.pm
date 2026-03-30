@@ -316,7 +316,7 @@ sub __dump_string {
 	$ret =~ s/\\n/$slash_n/g;
 	$ret =~ s/\\r/$slash_r/g;
 	$ret =~ s/\\t/$slash_t/g;
-	$ret =~ s/\\t/$slash_f/g;
+	$ret =~ s/\\f/$slash_f/g;
 
 	return $ret;
 }

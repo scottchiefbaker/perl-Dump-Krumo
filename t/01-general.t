@@ -38,11 +38,17 @@ is(kx( [ 0 ] )       , "[0]"           );
 is(kx( [ \0 ] )      , "[\\'0']"       ); # Scalar ref
 is(kx( [ undef ] )   , "[undef]"       );
 
+# Unprintable chars
+is(kx("\t\t")  , '"\t\t"'  , "Testing \\t");
+is(kx("\n\n")  , '"\n\n"'  , "Testing \\n");
+is(kx("\r\r")  , '"\r\r"'  , "Testing \\r");
+is(kx("\n\r\t"), '"\n\r\t"', "Testing \\n\\r\\t");
+
 # Long unprintable
-my $short = "\x{1b}" x 10;
-my $long  = "\x{1b}" x 50;
-is(kx($short), '"\e\e\e\e\e\e\e\e\e\e"', "Short string of unprintable chars");
-is(kx($long) , "pack('H*', '1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B')", "Long string of unprintable chars");
+my $short = "\x{1a}" x 10;
+my $long  = "\x{1a}" x 50;
+is(kx($short), '"\x{1A}\x{1A}\x{1A}\x{1A}\x{1A}\x{1A}\x{1A}\x{1A}\x{1A}\x{1A}"', "Short string of unprintable chars");
+is(kx($long) , "pack('H*', '1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A')", "Long string of unprintable chars");
 
 # Booleans
 is(kx(!!1) , 'true' );

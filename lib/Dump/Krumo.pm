@@ -303,7 +303,7 @@ sub __dump_string {
 		$ret = "\"$str\"";
 	# Longer unprintable stuff we just spit out the raw HEX
 	} elsif (!$printable) {
-		$ret = color(get_color('binary'), 'pack("H*", ' . bin2hex($x) . ")");
+		$ret = color(get_color('binary'), 'pack(\'H*\', \'' . bin2hex($x) . '\')');
 	} else {
 		my $quoted = quote_string($x);
 		$ret       = color(get_color('string'), $quoted);

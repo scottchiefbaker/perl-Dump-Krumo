@@ -38,6 +38,12 @@ is(kx( [ 0 ] )       , "[0]"           );
 is(kx( [ \0 ] )      , "[\\'0']"       ); # Scalar ref
 is(kx( [ undef ] )   , "[undef]"       );
 
+# Long unprintable
+my $short = "\x{1b}" x 10;
+my $long  = "\x{1b}" x 50;
+is(kx($short), '"\e\e\e\e\e\e\e\e\e\e"', "Short string of unprintable chars");
+is(kx($long) , "pack('H*', '1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1B')", "Long string of unprintable chars");
+
 # Booleans
 is(kx(!!1) , 'true' );
 is(kx(!!0) , 'false');

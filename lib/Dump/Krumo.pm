@@ -274,7 +274,7 @@ sub __dump_string {
 	}
 
 	# Highlight internal ANSI color sequences in a string
-	if ($highlight_ansi && $x =~ m/\e\[\d/) {
+	if ($highlight_ansi && $x =~ m/\e\[[\d;]+m/) {
 		return highlight_ansi($x);
 	}
 
@@ -293,6 +293,8 @@ sub __dump_string {
 
 			if ($is_printable) {
 				$str .= color(get_color('string'),chr($x));
+			} elsif ($x == 27) {
+				$str .= color(get_color('binary'), '\\e');
 			} else {
 				$str .= color(get_color('binary'), '\\x{' . sprintf("%02X", $x) . '}');
 			}

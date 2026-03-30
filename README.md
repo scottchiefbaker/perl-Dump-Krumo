@@ -60,6 +60,10 @@ focuses on making your data human readable and easily parseable.
 
     When `kxd()` is called it will dump a full stack trace.
 
+- `$Dump::Krumo::highlight_ansi = 1`
+
+    Colorize and make visible ANSI escape sequences
+
 - `$Dump::Krumo::COLORS`
 
     Reference to a hash of colors for each variable type. Update this and create

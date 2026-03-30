@@ -19,14 +19,18 @@ our %EXPORT_TAGS = ('short' => [('k', 'kd')]);
 # https://blogs.perl.org/users/grinnz/2018/04/a-guide-to-versions-in-perl.html
 our $VERSION = 'v0.1.9';
 
-our $use_color     = 1; # Output in color
-our $return_string = 0; # Return a string instead of printing it
-our $hash_sort     = 1; # Sort hash keys before output
-our $debug         = 0; # Low level developer level debugging
-our $disable       = 0; # Disable Dump::Krumo
-our $indent_spaces = 2; # Number of spaces to use for each level of indent
-our $promote_bool  = 1; # Convert JSON::PP::Boolean to raw true/false
-our $stack_trace   = 0; # kxd() prints a stack trace
+our $use_color      = 1; # Output in color
+our $return_string  = 0; # Return a string instead of printing it
+our $hash_sort      = 1; # Sort hash keys before output
+our $debug          = 0; # Low level developer level debugging
+our $disable        = 0; # Disable Dump::Krumo
+our $indent_spaces  = 2; # Number of spaces to use for each level of indent
+our $promote_bool   = 1; # Convert JSON::PP::Boolean to raw true/false
+our $stack_trace    = 0; # kxd() prints a stack trace
+our $highlight_ansi = 1;
+
+# Regexp to match an ANSI escape sequence
+my $ansi_regex = qr/(\e\[(?:[0-9]{0,3}(?:;[0-9]{1,3}){0,10})[mK])/;
 
 # Global var to track how many levels we're indented
 my $current_indent_level = 0;
@@ -267,6 +271,11 @@ sub __dump_string {
 	# This is the catch all for "" or ''
 	if (length($x) == 0) {
 		return color(get_color('empty_braces'), "''"),
+	}
+
+	# Highlight internal ANSI color sequences in a string
+	if ($highlight_ansi && $x =~ m/\e\[\d/) {
+		return highlight_ansi($x);
 	}
 
 	# Is the whole string printable
@@ -775,6 +784,80 @@ sub get_color {
 	return $ret;
 }
 
+sub highlight_ansi {
+	my $str = shift();
+
+	# Get all the non-empty parts
+	my @parts = split(/$ansi_regex/i, $str);
+	@parts    = grep { $_; } @parts;
+
+	# Loop through each part of the string colorizing the ANSI or
+	# the regular string depending which is it
+	my $ret = '';
+	foreach my $str (@parts) {
+		my $is_ansi = $str =~ m/^\e\[\d/;
+
+		if ($is_ansi) {
+			$str = colorize_ansi($str);
+		} else {
+			$str = __dump_string($str);
+
+			my $quotes = "'" . '"';
+
+			# Remove the quotes
+			$str =~ s/^${ansi_regex}[$quotes]/$1/;
+			$str =~ s/[$quotes]${ansi_regex}$//;
+		}
+
+		$ret .= $str;
+	}
+
+	$ret .= "\e[0m";
+
+	return $ret;
+}
+
+sub colorize_ansi {
+	my $str = shift();
+
+	my $start = $str =~ s/^(\e\[)//;
+	my $end   = $str =~ s/[mK]$//;
+
+	if (!$start) {
+		return $str;
+	}
+
+	# Get each ANSI number
+    my @parts = split(/;/, $str);
+
+	# Color for the numbers, and the `;` separator
+    my $color = color("15_bold");
+    my $sep   = color('reset') . color(146);
+
+	# Colorize each number
+    foreach (@parts) {
+        $_ = $color . $_;
+    }
+
+    my $ret = $sep . '(\\e[';
+    for (my $i = 0; $i < @parts; $i++) {
+        my $p = $parts[$i];
+        my $is_last = $i == scalar(@parts) - 1;
+
+        if (!$is_last) {
+            $ret .= $p . $sep . ";";
+        } else {
+            $ret .= $p;
+        }
+    }
+
+    $ret .= $sep . "m)";
+    $ret .= color('reset');
+
+    return $ret;
+}
+
+
 ################################################################################
 ################################################################################
 ################################################################################
@@ -850,6 +933,10 @@ Convert JSON::PP::Booleans to true/false instead of treating them as objects.
 =item C<$Dump::Krumo::stack_trace = 0>
 
 When C<kxd()> is called it will dump a full stack trace.
+
+=item C<$Dump::Krumo::highlight_ansi = 1>
+
+Colorize and make visible ANSI escape sequences
 
 =item C<$Dump::Krumo::COLORS>
 

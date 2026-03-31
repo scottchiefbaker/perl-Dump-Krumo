@@ -804,17 +804,13 @@ sub highlight_ansi {
 		} else {
 			$str = __dump_string($str);
 
-			my $quotes = "'" . '"';
-
 			# Remove the quotes
-			$str =~ s/^${ansi_regex}[$quotes]/$1/;
-			$str =~ s/[$quotes]${ansi_regex}$//;
+			$str =~ s/^((?:\e\[[0-9;]*m)*)['"]/$1/;
+			$str =~ s/['"]((?:\e\[[0-9;]*m)*)$/$1/;
 		}
 
 		$ret .= $str;
 	}
-
-	$ret .= "\e[0m";
 
 	return $ret;
 }

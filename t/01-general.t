@@ -44,6 +44,11 @@ is(kx("\n\n")  , '"\n\n"'  , "Testing \\n");
 is(kx("\r\r")  , '"\r\r"'  , "Testing \\r");
 is(kx("\n\r\t"), '"\n\r\t"', "Testing \\n\\r\\t");
 
+# ANSI highlight tests
+is(kx("\e[1;32m"), '(\e[1;32m)', "ANSI color #1");
+is(kx("\e[32foo"), '"\e[32foo"', "ANSI color #2 missing closing delim");
+is(kx("\e[0mbar"), '(\e[0m)bar', "ANSI color #2 missing closing delim");
+
 # Long unprintable
 my $short = "\x{1a}" x 10;
 my $long  = "\x{1a}" x 50;

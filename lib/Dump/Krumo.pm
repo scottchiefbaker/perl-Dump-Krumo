@@ -725,8 +725,6 @@ sub kd {
 	return kxd(@_);
 }
 
-
-
 ################################################################################
 
 # String format: '115', '165_bold', '10_on_140', 'reset', 'on_173', 'red', 'white_on_blue'
@@ -857,26 +855,26 @@ sub colorize_ansi {
 	my $reset = color();
 
 	# Colorize each number
-    foreach (@parts) {
-        $_ = $color . $_;
-    }
+	foreach (@parts) {
+		$_ = $color . $_;
+	}
 
-    my $ret = $sep . '(' . $esc . '\\e' . $sep . '[';
-    for (my $i = 0; $i < @parts; $i++) {
-        my $p = $parts[$i];
-        my $is_last = $i == scalar(@parts) - 1;
+	my $ret = $sep . '(' . $esc . '\\e' . $sep . '[';
+	for (my $i = 0; $i < @parts; $i++) {
+		my $p = $parts[$i];
+		my $is_last = $i == scalar(@parts) - 1;
 
-        if (!$is_last) {
-            $ret .= $p . $sep . ";";
-        } else {
-            $ret .= $p;
-        }
-    }
+		if (!$is_last) {
+			$ret .= $p . $sep . ";";
+		} else {
+			$ret .= $p;
+		}
+	}
 
-    $ret .= $sep . "m)";
-    $ret .= $reset;
+	$ret .= $sep . "m)";
+	$ret .= $reset;
 
-    return $ret;
+	return $ret;
 }
 
 

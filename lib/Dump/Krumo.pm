@@ -27,6 +27,7 @@ our $disable        = 0; # Disable Dump::Krumo
 our $indent_spaces  = 2; # Number of spaces to use for each level of indent
 our $promote_bool   = 1; # Convert JSON::PP::Boolean to raw true/false
 our $stack_trace    = 0; # kxd() prints a stack trace
+our $short_hex      = 0; # Output \x12 instead of \x{12}
 our $highlight_ansi = 1;
 
 # Regexp to match an ANSI escape sequence
@@ -306,7 +307,11 @@ sub __dump_string {
 			} elsif ($x == 13) { # \r
 				$str .= color(get_color('binary'), '\\r');
 			} else {
-				$str .= color(get_color('binary'), '\\x{' . sprintf("%02X", $x) . '}');
+				if ($short_hex) {
+					$str .= color(get_color('binary'), '\\x' . sprintf("%02X", $x));
+				} else {
+					$str .= color(get_color('binary'), '\\x{' . sprintf("%02X", $x) . '}');
+				}
 			}
 
 			if (!$is_printable) {
@@ -954,6 +959,12 @@ When C<kxd()> is called it will dump a full stack trace.
 =item C<$Dump::Krumo::highlight_ansi = 1>
 
 Colorize and make visible ANSI escape sequences
+
+=item C<$Dump::Krumo::short_hex = 0>
+
+Use shorter hex syntax for strings with unpritable characters. By default we
+print C<\x{01}\x\{02}\x{03}>, but with short_hex enabled we print without
+braces instead: C<\x01\x02\x03>.
 
 =item C<$Dump::Krumo::COLORS>
 

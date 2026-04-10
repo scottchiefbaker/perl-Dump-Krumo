@@ -64,6 +64,12 @@ focuses on making your data human readable and easily parseable.
 
     Colorize and make visible ANSI escape sequences
 
+- `$Dump::Krumo::short_hex = 0`
+
+    Use shorter hex syntax for strings with unpritable characters. By default we
+    print `\x{01}\x\{02}\x{03}`, but with short\_hex enabled we print without
+    braces instead: `\x01\x02\x03`.
+
 - `$Dump::Krumo::COLORS`
 
     Reference to a hash of colors for each variable type. Update this and create

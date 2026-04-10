@@ -287,10 +287,11 @@ sub __dump_string {
 	my $ret = '';
 
 	# For short strings we show the unprintable chars as \x{00} escapes
-	if (!$printable && (length($x) < 20)) {
+	if (!$printable) {
 		my @p = unpack("C*", $x);
 
 		my $str  = '';
+		my $unpr = 0; # Count of unprintable chars
 		foreach my $x (@p) {
 			my $is_printable = is_printable(chr($x));
 
@@ -307,12 +308,25 @@ sub __dump_string {
 			} else {
 				$str .= color(get_color('binary'), '\\x{' . sprintf("%02X", $x) . '}');
 			}
+
+			if (!$is_printable) {
+				$unpr++;
+			}
 		}
 
-		$ret = "\"$str\"";
-	# Longer unprintable stuff we just spit out the raw HEX
-	} elsif (!$printable) {
-		$ret = color(get_color('binary'), 'pack(\'H*\', \'' . bin2hex($x) . '\')');
+		# Calculate the percentage of unpritable chars
+		my $total = scalar(@p);
+		my $per   = ($unpr / $total) * 100;
+
+		#printf("Len = %d / Unprintable = %0.2f%%\n", $total, $per);
+
+		# For longer strings that are MOSTLY unprintable we output a pack statement
+		if ($total > 20 && $per > 30) {
+			$ret = color(get_color('binary'), 'pack(\'H*\', \'' . bin2hex($x) . '\')');
+		# Output the string with non-printable chars highlighted
+		} else {
+			$ret = "\"$str\"";
+		}
 	} else {
 		my $quoted = quote_string($x);
 		$ret       = color(get_color('string'), $quoted);

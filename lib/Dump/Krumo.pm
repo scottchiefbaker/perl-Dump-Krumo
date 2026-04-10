@@ -803,10 +803,6 @@ sub highlight_ansi {
 			$str = colorize_ansi($str);
 		} else {
 			$str = __dump_string($str);
-
-			# Remove the quotes
-			$str =~ s/^((?:\e\[[0-9;]*m)*)['"]/$1/;
-			$str =~ s/['"]((?:\e\[[0-9;]*m)*)$/$1/;
 		}
 
 		$ret .= $str;

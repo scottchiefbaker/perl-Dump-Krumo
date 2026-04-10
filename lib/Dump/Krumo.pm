@@ -834,13 +834,15 @@ sub colorize_ansi {
 	# Color for the numbers, and the `;` separator
     my $color = color("15_bold");
     my $sep   = color('reset') . color(146);
+	my $esc   = color(51);
+	my $reset = color();
 
 	# Colorize each number
     foreach (@parts) {
         $_ = $color . $_;
     }
 
-    my $ret = $sep . '(\\e[';
+    my $ret = $sep . '(' . $esc . '\\e' . $sep . '[';
     for (my $i = 0; $i < @parts; $i++) {
         my $p = $parts[$i];
         my $is_last = $i == scalar(@parts) - 1;
@@ -853,7 +855,7 @@ sub colorize_ansi {
     }
 
     $ret .= $sep . "m)";
-    $ret .= color('reset');
+    $ret .= $reset;
 
     return $ret;
 }

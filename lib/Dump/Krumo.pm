@@ -293,8 +293,14 @@ sub __dump_string {
 
 			if ($is_printable) {
 				$str .= color(get_color('string'),chr($x));
-			} elsif ($x == 27) {
+			} elsif ($x == 27) { # \e
 				$str .= color(get_color('binary'), '\\e');
+			} elsif ($x == 10) { # \n
+				$str .= color(get_color('binary'), '\\n');
+			} elsif ($x == 9) {  # \t
+				$str .= color(get_color('binary'), '\\t');
+			} elsif ($x == 13) { # \r
+				$str .= color(get_color('binary'), '\\r');
 			} else {
 				$str .= color(get_color('binary'), '\\x{' . sprintf("%02X", $x) . '}');
 			}
@@ -602,7 +608,7 @@ sub is_printable {
 	}
 
 	my $ret = 0;
-	if (defined($str) && $str =~ /^[[:print:]\n\r\t]*$/) {
+	if (defined($str) && $str =~ /^[[:print:]]*$/) {
 		$ret = 1;
 	}
 

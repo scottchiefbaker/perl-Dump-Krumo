@@ -57,6 +57,13 @@ our $COLORS = {
 	'empty_braces'  => '15_bold',      # Either [] or {} or ''
 };
 
+# `\n`, `\r`, and `\t` get highlighted to these values
+my $ctrl_color = color(get_color('control_char'));
+my $str_color  = color(get_color('string'));
+my $slash_n    = $ctrl_color . '\\n' . $str_color;
+my $slash_r    = $ctrl_color . '\\r' . $str_color;
+my $slash_t    = $ctrl_color . '\\t' . $str_color;
+
 our $WIDTH = get_terminal_width();
 $WIDTH  ||= 100;
 
@@ -336,11 +343,6 @@ sub __dump_string {
 		my $quoted = quote_string($x);
 		$ret       = color(get_color('string'), $quoted);
 	}
-
-	# Convert special chars to printable version
-	my $slash_n = color(get_color('control_char'), '\\n') . color(get_color('string'));
-	my $slash_r = color(get_color('control_char'), '\\r') . color(get_color('string'));
-	my $slash_t = color(get_color('control_char'), '\\t') . color(get_color('string'));
 
 	$ret =~ s/\n/$slash_n/g;
 	$ret =~ s/\r/$slash_r/g;

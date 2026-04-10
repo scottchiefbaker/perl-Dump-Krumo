@@ -732,8 +732,11 @@ sub color {
 	my ($str, $txt) = @_;
 
 	# If we're NOT connected to a an interactive terminal don't do color
-	state $color_available = (!$use_color || -t STDOUT == 0);
-	if ($color_available) {
+	state $color_available = ($use_color && -t STDOUT != 0);
+	# Force color on
+	if ($use_color == 2) { $color_available = 1; };
+
+	if (!$color_available) {
 		return $txt // "";
 	}
 
@@ -931,7 +934,23 @@ Debug print C<$var> and C<die()>. This outputs file and line information.
 
 =item C<$Dump::Krumo::use_color = 1>
 
-Turn color on/off
+Turn color on/off.
+
+=over 4
+
+=item *
+
+Setting to C<0> disables color
+
+=item *
+
+Setting to C<1> enables color for interactive shells (smart detection)
+
+=item *
+
+Setting to C<2> forces color to be enabled
+
+=back
 
 =item C<$Dump::Krumo::return_string = 0>
 

@@ -37,7 +37,11 @@ focuses on making your data human readable and easily parseable.
 
 - `$Dump::Krumo::use_color = 1`
 
-    Turn color on/off
+    Turn color on/off.
+
+    - Setting to `0` disables color
+    - Setting to `1` enables color for interactive shells (smart detection)
+    - Setting to `2` forces color to be enabled
 
 - `$Dump::Krumo::return_string = 0`
 

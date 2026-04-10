@@ -281,6 +281,9 @@ sub __dump_string {
 	# Is the whole string printable
 	my $printable = is_printable($x);
 
+	# https://blogs.perl.org/users/mauke/2026/04/quick-and-dirty-string-dumping.html
+	#printf("%vd (len = %d) (print = %d)\n", $x, length($x), $printable);
+
 	my $ret = '';
 
 	# For short strings we show the unprintable chars as \x{00} escapes

@@ -766,6 +766,14 @@ sub color {
 	return $ret;
 }
 
+# Remove all ANSI codes from a string
+sub bleach_text {
+	my $str = shift();
+	$str    =~ s/\e\[\d*(;\d+)*m//mg;
+
+	return $str;
+}
+
 sub get_terminal_width {
 	# If there is no $TERM then tput will bail out
 	if (!$ENV{TERM} || -t STDOUT == 0) {

@@ -111,6 +111,7 @@ sub kx {
 	if ($return_string) {
 		return $str;
 	} else {
+		print color('reset'); # Clear any shell ANSI colors
 		print "$str\n";
 	}
 }

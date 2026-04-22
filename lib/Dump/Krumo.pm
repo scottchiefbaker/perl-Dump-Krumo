@@ -283,7 +283,7 @@ sub __dump_string {
 	}
 
 	# Highlight internal ANSI color sequences in a string
-	if ($highlight_ansi && $x =~ m/\e\[[\d;]+m/) {
+	if ($highlight_ansi && $x =~ $ansi_regex) {
 		return highlight_ansi($x);
 	}
 
@@ -835,7 +835,9 @@ sub highlight_ansi {
 	# the regular string depending which is it
 	my $ret = '';
 	foreach my $str (@parts) {
-		my $is_ansi = $str =~ m/^\e\[\d/;
+		# No need to be more strict, because the split above checks
+		# for valid ANSIness
+		my $is_ansi = $str =~ m/^\e/;
 
 		if ($is_ansi) {
 			$str = colorize_ansi($str);

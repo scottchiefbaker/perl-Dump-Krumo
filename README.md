@@ -70,7 +70,7 @@ focuses on making your data human readable and easily parseable.
 
 - `$Dump::Krumo::short_hex = 0`
 
-    Use shorter hex syntax for strings with unpritable characters. By default we
+    Use shorter hex syntax for strings with unprintable characters. By default we
     print `\x{01}\x\{02}\x{03}`, but with short\_hex enabled we print without
     braces instead: `\x01\x02\x03`.
 

@@ -8,8 +8,8 @@ my %WriteMakefileArgs = (
     AUTHOR           => 'Scott Baker <bakerscot@cpan.org>',
     VERSION_FROM     => 'lib/Dump/Krumo.pm',
     ABSTRACT_FROM    => 'lib/Dump/Krumo.pm',
-    LICENSE          => 'mit',
-    MIN_PERL_VERSION => '5.010',
+    LICENSE          => 'gpl_3',
+    MIN_PERL_VERSION => '5.016',
 	PREREQ_PM => {
         'Scalar::Util' => '1.26',
     },

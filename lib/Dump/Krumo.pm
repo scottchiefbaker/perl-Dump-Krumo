@@ -37,6 +37,10 @@ my $ansi_regex = qr/(\e\[(?:[0-9]{0,3}(?:;[0-9]{1,3}){0,10})[mK])/;
 my $current_indent_level = 0;
 # Global var to track the indent to the right end of the most recent hash key
 my $left_pad_width       = 0;
+# Global var to track extra content width from structural prefixes (e.g.
+# the '"ClassName" :: ' prepended by __dump_class).  Added to the total
+# in needs_column_mode() alongside left_pad_width.
+my $content_offset       = 0;
 
 our $COLORS = {
 	'string'        => 230,            # Standard strings
@@ -231,7 +235,7 @@ sub __dump_class {
 	}
 
 	my $len = length($class) + 6; # 2x quotes and ' :: '
-	$left_pad_width += $len;
+	$content_offset += $len;
 
 	# We need an unblessed copy of the data so we can display it
 	if ($reftype eq 'ARRAY') {
@@ -246,7 +250,7 @@ sub __dump_class {
 
 	$ret .= __dump($y);
 
-	$left_pad_width -= $len;
+	$content_offset -= $len;
 
 	return $ret;
 }
@@ -529,10 +533,18 @@ sub max_length {
 # we only need a rough "will this fit on one line?" comparison.
 #
 # For scalars we count:
-#   - undef           => 5 chars
-#   - booleans        => "true" (4) or "false" (5)
-#   - numbers         => length of the value as-is
-#   - strings         => length + 2 (for surrounding quotes)
+#   - undef             => 5 chars
+#   - booleans          => "true" (4) or "false" (5)
+#   - numbers           => length of the value as-is
+#   - strings           => length + 2 (for surrounding quotes)
+#
+# For blessed objects we mirror the __dump dispatch order:
+#   - Regexp            => length of stringified qr// form
+#   - JSON::PP::Boolean => "true" / "false" (if promotion is on)
+#   - Other classes     => "ClassName" :: <content-length>
+#
+# where <content-length> recurses into the underlying reftype
+# (ARRAY, HASH, SCALAR, or fallback stringification).
 #
 # Nested ARRAY/HASH refs recurse.  Once the running total exceeds
 # WIDTH we short-circuit with a large sentinel value to avoid
@@ -553,6 +565,28 @@ sub array_str_len {
 			$len += 4; # "true" is 4 chars
 		} elsif (is_bool_val($x)) {
 			$len += 5; # "false" is 5 chars
+		} elsif (my $class = Scalar::Util::blessed($x)) {
+			# Blessed object — estimate the rendered width to match
+			# the __dump dispatch order (__dump_regexp first, then
+			# JSON::PP::Boolean promotion, then __dump_class).
+			if ($class eq 'Regexp') {
+				$len += length("$x");  # qr/.../
+			} elsif ($promote_bool && $class eq 'JSON::PP::Boolean') {
+				$len += ($$x) ? 4 : 5;  # true / false
+			} else {
+				# "ClassName" :: content — matches __dump_class()
+				$len += length($class) + 6;
+				my $reftype = Scalar::Util::reftype($x);
+				if ($reftype eq 'ARRAY') {
+					$len += array_str_len(@$x);
+				} elsif ($reftype eq 'HASH') {
+					$len += array_str_len(%$x);
+				} elsif ($reftype eq 'SCALAR') {
+					$len += length($$x);   # epoch number, string, etc.
+				} else {
+					$len += length("$x");
+				}
+			}
 		} else {
 			$len += length($x);
 
@@ -608,14 +642,37 @@ sub needs_column_mode {
 		$len += array_str_len(@vals);
 		$len += 4;        # For the '{ ' on the start/end
 		$len += 6 * $cnt; # ' => ' (4) + the ', ' separator (2) for each pair
-	# This is a class/obj — treated like an array for width purposes
+	# Blessed object — use reftype for accurate width estimation.
+	# This branch is a safety net: in normal flow, __dump_class
+	# creates an unblessed copy so the ARRAY/HASH branches above
+	# handle the content.  The class prefix width is tracked via
+	# $content_offset, set by __dump_class.
 	} elsif ($type) {
-		my $cnt = scalar(@$x);
+		my $reftype = Scalar::Util::reftype($x);
 
-		$len += array_str_len(@$x);
-		$len += 2;        # For the '[' on the start/end
-		$len += 2 * $cnt; # ' => ' and the ', ' for each item
+		if ($reftype eq 'HASH') {
+			my @keys = keys(%$x);
+			my @vals = values(%$x);
+			my $cnt  = scalar(@keys);
+
+			$len += array_str_len(@keys);
+			$len += array_str_len(@vals);
+			$len += 4;        # '{ ' and ' }'
+			$len += 6 * $cnt; # ' => ' + ', ' for each pair
+		} elsif ($reftype eq 'ARRAY') {
+			my $cnt = scalar(@$x);
+
+			$len += array_str_len(@$x);
+			$len += 2;        # '[' and ']'
+			$len += 2 * $cnt; # ', ' for each item
+		} else {
+			# SCALAR, GLOB, CODE, etc. — rough estimate
+			$len += length("$x");
+		}
 	}
+
+	# Add any structural content offset (e.g. class prefix "ClassName" :: )
+	$len += $content_offset;
 
 	my $content_len = $len;
 

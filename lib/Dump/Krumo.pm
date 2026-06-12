@@ -425,9 +425,10 @@ sub __dump_hash {
 	}
 
 	# See if we need to switch to column mode to output this array
-	my $max_length  = max_length(@keys);
-	$left_pad_width = $max_length;
-	my $column_mode = needs_column_mode($x, $key_len);
+	my $max_length      = max_length(@keys);
+	my $saved_pad_width = $left_pad_width;
+	$left_pad_width     = $max_length;
+	my $column_mode     = needs_column_mode($x, $key_len);
 
 	# If we're not in column mode there is no need to compensate for this
 	if (!$column_mode) {
@@ -486,6 +487,7 @@ sub __dump_hash {
 	}
 
 	$current_indent_level--;
+	$left_pad_width = $saved_pad_width;
 
 	return $ret;
 }

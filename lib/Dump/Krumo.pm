@@ -64,6 +64,8 @@ my $slash_n    = $ctrl_color . '\\n' . $str_color;
 my $slash_r    = $ctrl_color . '\\r' . $str_color;
 my $slash_t    = $ctrl_color . '\\t' . $str_color;
 
+# WIDTH is the terminal column width used to decide if data fits on one line
+# or must wrap to column mode. Detected via `tput cols`, falling back to 100.
 our $WIDTH = get_terminal_width();
 $WIDTH  ||= 100;
 
@@ -419,16 +421,25 @@ sub __dump_hash {
 		@keys = sort(@keys);
 	}
 
-	my $key_len = 0;
-	foreach my $x (@keys) {
-		$key_len += length($x) + 4; # Add four for ' => '
-	}
-
-	# See if we need to switch to column mode to output this array
+	# Calculate the column mode decision and key-alignment width.
+	#
+	# max_length      — longest hash key, used to pad shorter keys so
+	#                   '=>' operators line up vertically in column mode.
+	# saved_pad_width — snapshot of left_pad_width before we override it
+	#                   for the duration of this hash's rendering.
+	# column_mode     — true if the inline representation would exceed
+	#                   the terminal width.
+	#
+	# During needs_column_mode(), left_pad_width is still the value from
+	# the parent scope (e.g. a class label or an enclosing hash key).
+	# After the check we set it to max_length so that child dumps
+	# (values of this hash) can account for this hash's key width when
+	# they themselves are tested via needs_column_mode().
 	my $max_length      = max_length(@keys);
 	my $saved_pad_width = $left_pad_width;
+	$left_pad_width     = $saved_pad_width;
+	my $column_mode     = needs_column_mode($x);
 	$left_pad_width     = $max_length;
-	my $column_mode     = needs_column_mode($x, $key_len);
 
 	# If we're not in column mode there is no need to compensate for this
 	if (!$column_mode) {
@@ -496,7 +507,9 @@ sub __dump_hash {
 # Various helper functions
 ################################################################################
 
-# Calculate the length of the longest string in an array
+# Calculate the length of the longest string in a list of strings.
+# Used to determine how much padding to add after hash keys so
+# the '=>' operators align vertically in column mode.
 sub max_length {
 	my $max = 0;
 
@@ -510,7 +523,21 @@ sub max_length {
 	return $max;
 }
 
-# Calculate the length in chars of this array
+# Estimate the rendered string length of a list of items, counting
+# how many characters the inline (non-column) representation would
+# occupy. This is deliberately conservative (no ANSI codes) because
+# we only need a rough "will this fit on one line?" comparison.
+#
+# For scalars we count:
+#   - undef           => 5 chars
+#   - booleans        => "true" (4) or "false" (5)
+#   - numbers         => length of the value as-is
+#   - strings         => length + 2 (for surrounding quotes)
+#
+# Nested ARRAY/HASH refs recurse.  Once the running total exceeds
+# WIDTH we short-circuit with a large sentinel value to avoid
+# wasting CPU on deeply nested structures that will obviously
+# require column mode anyway.
 sub array_str_len {
 	my @arr = @_;
 
@@ -523,9 +550,9 @@ sub array_str_len {
 		} elsif (ref $x eq 'HASH') {
 			$len += array_str_len(%$x);
 		} elsif (is_bool_val($x) && $x) {
-			$len += 6; # 'true'
+			$len += 4; # "true" is 4 chars
 		} elsif (is_bool_val($x)) {
-			$len += 7; # 'false'
+			$len += 5; # "false" is 5 chars
 		} else {
 			$len += length($x);
 
@@ -545,10 +572,22 @@ sub array_str_len {
 	return $len;
 }
 
-# Calculate if this data structure will wrap the screen and needs to be in column mode instead
+# Decide whether a data structure is too wide to render inline and must
+# use column mode (one key/value per line).  We estimate the full rendered
+# width as:
+#
+#   total = left_indent + hash_padding + content_length
+#
+# where:
+#   left_indent   = current nesting depth (in spaces)
+#   hash_padding  = width of the longest hash key seen so far + 4 for ' => '
+#   content_length = estimated string length of all values + separators
+#
+# If total > 97% of terminal width, we switch to column mode.  The 97%
+# fudge factor acknowledges that our length estimation is approximate
+# (ANSI codes are stripped, nested structures are recursed, etc.).
 sub needs_column_mode {
-	my ($x, $extra_len) = @_;
-	$extra_len        //= 0;
+	my ($x) = @_;
 
 	my $ret  = 0;
 	my $len  = 0;
@@ -568,8 +607,8 @@ sub needs_column_mode {
 		$len += array_str_len(@keys);
 		$len += array_str_len(@vals);
 		$len += 4;        # For the '{ ' on the start/end
-		$len += 6 * $cnt; # ' => ' and the ', ' for each item
-	# This is a class/obj
+		$len += 6 * $cnt; # ' => ' (4) + the ', ' separator (2) for each pair
+	# This is a class/obj — treated like an array for width purposes
 	} elsif ($type) {
 		my $cnt = scalar(@$x);
 
@@ -586,7 +625,7 @@ sub needs_column_mode {
 	my $pad_width    = $left_pad_width + 4; # For the ' => '
 
 	# Add it all together
-	$len = $left_indent + $pad_width + $len + $extra_len;
+	$len = $left_indent + $pad_width + $len;
 
 	# If we're too wide for the screen we drop to column mode
 	# Our math isn't 100% down the character so we use 97% to give
@@ -602,11 +641,11 @@ sub needs_column_mode {
 
 		if ($first) {
 			printf("Screen width: %d\n\n", $WIDTH * .97);
-			printf("Left Indent | Hash Padding | Content | Extra | Total\n");
+			printf("Left Indent | Hash Padding | Content | Total\n");
 			$first = 0;
 		}
 
-		printf("%8d    +    %6d    +  %4d   + %4d  = %4d    (%d)\n", $left_indent, $pad_width, $content_len, $extra_len, $len, $ret);
+		printf("%8d    +    %6d    +  %4d  = %4d    (%d)\n", $left_indent, $pad_width, $content_len, $len, $ret);
 	}
 
 	return $ret;
@@ -779,6 +818,10 @@ sub bleach_text {
 	return $str;
 }
 
+# Determine the terminal width in columns by shelling out to `tput cols`.
+# Returns 0 if no interactive terminal is detected (caller falls back to
+# the default WIDTH of 100).  The width is cached in $WIDTH at module
+# load time, not re-queried per call.
 sub get_terminal_width {
 	# If there is no $TERM then tput will bail out
 	if (!$ENV{TERM} || -t STDOUT == 0) {

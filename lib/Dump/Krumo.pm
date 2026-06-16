@@ -7,7 +7,7 @@ use Scalar::Util;
 
 package Dump::Krumo;
 
-use Carp;
+use autouse 'Carp' => qw(croak confess);
 use Exporter 'import';
 
 our @EXPORT    = qw(kx kxd);

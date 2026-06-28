@@ -1094,7 +1094,7 @@ Colorize and make visible ANSI escape sequences
 
 =item C<$Dump::Krumo::short_hex = 0>
 
-Use shorter hex syntax for strings with unpritable characters. By default we
+Use shorter hex syntax for strings with unprintable characters. By default we
 print C<\x{01}\x\{02}\x{03}>, but with short_hex enabled we print without
 braces instead: C<\x01\x02\x03>.
 

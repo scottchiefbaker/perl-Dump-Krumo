@@ -106,12 +106,15 @@ sub kx {
 
 	# If it's a real array we remove the false [ ] added by __dump()
 	if ($is_array) {
-		my $len = length($str);
-		$str    = substr($str, 1, $len - 2);
-	}
-
-	if ($cnt > 1 || $cnt == 0) {
-		$str = "($str)";
+		# Plain empty array `()`
+		if ($cnt == 0) {
+			$str = color(get_color('empty_braces'), "()");
+		# An array with at least ONE thing in it
+		} else {
+			my $len = length($str);
+			$str    = substr($str, 1, $len - 2);
+			$str    = "($str)";
+		}
 	}
 
 	if ($return_string) {

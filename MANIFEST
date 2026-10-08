@@ -5,6 +5,10 @@ lib/Dump/Krumo.pm
 t/00-load.t
 t/01-general.t
 t/02-ansi.t
+t/03-column.t
+t/04-config.t
+t/05-objects.t
+t/06-kxd.t
 TODO
 LICENSE
 README.md

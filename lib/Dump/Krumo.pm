@@ -428,10 +428,26 @@ sub __dump_hash {
 		@keys = sort(@keys);
 	}
 
+	# Check to see if any of the array keys need to be quoted
+	my $keys_need_quotes = 0;
+	foreach my $key (@keys) {
+		if ($key =~ /\W/) {
+			$keys_need_quotes = 1;
+			last;
+		}
+	}
+
+	# Render each key to its final (uncolored) form up front. Width
+	# calculations below must measure what will actually be printed —
+	# quote_string() may add surrounding quotes and backslash escapes,
+	# so the rendered form can be wider than the raw key.
+	my @rendered_keys = map { ($keys_need_quotes) ? quote_string($_) : $_ } @keys;
+
 	# Calculate the column mode decision and key-alignment width.
 	#
-	# max_length      — longest hash key, used to pad shorter keys so
-	#                   '=>' operators line up vertically in column mode.
+	# max_length      — longest *rendered* key, used to pad shorter keys
+	#                   so '=>' operators line up vertically in column
+	#                   mode.
 	# saved_pad_width — snapshot of left_pad_width before we override it
 	#                   for the duration of this hash's rendering.
 	# column_mode     — true if the inline representation would exceed
@@ -442,7 +458,7 @@ sub __dump_hash {
 	# After the check we set it to max_length so that child dumps
 	# (values of this hash) can account for this hash's key width when
 	# they themselves are tested via needs_column_mode().
-	my $max_length      = max_length(@keys);
+	my $max_length      = max_length(@rendered_keys);
 	my $saved_pad_width = $left_pad_width;
 	$left_pad_width     = $saved_pad_width;
 	my $column_mode     = needs_column_mode($x);
@@ -453,29 +469,15 @@ sub __dump_hash {
 		$max_length = 0;
 	}
 
-	# Check to see if any of the array keys need to be quoted
-	my $keys_need_quotes = 0;
-	foreach my $key (@keys) {
-		if ($key =~ /\W/) {
-			$keys_need_quotes = 1;
-			last;
-		}
-	}
-
 	# Loop through each key and build the appropriate string for it
-	foreach my $key (@keys) {
-		my $val = $x->{$key};
-
-		my $key_str = '';
-		if ($keys_need_quotes) {
-			$key_str = "'" . color(get_color('hash_key'), $key) . "'";
-		} else {
-			$key_str = color(get_color('hash_key'), $key);
-		}
+	for (my $i = 0; $i < @keys; $i++) {
+		my $key     = $keys[$i];
+		my $val     = $x->{$key};
+		my $key_str = color(get_color('hash_key'), $rendered_keys[$i]);
 
 		# Align the hash keys
 		if ($column_mode) {
-			my $raw_len     = length($key);
+			my $raw_len     = length($rendered_keys[$i]);
 			my $append_cnt  = $max_length - $raw_len;
 
 			# Sometimes this goes negative?
@@ -912,6 +914,8 @@ sub quote_string {
 
 	# Otherwise, escape for double quotes
 	(my $escaped = $s) =~ s/([\\"])/\\$1/g;
+	$escaped =~ s/\$/\\\$/g;
+	$escaped =~ s/\@/\\\@/g;
 	$escaped =~ s/\n/\\n/g;
 	$escaped =~ s/\r/\\r/g;
 	$escaped =~ s/\t/\\t/g;

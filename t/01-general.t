@@ -122,4 +122,31 @@ is(kx('a@b')  , '"a\\@b"', "scalar string containing an at sign");
 	is_deeply(\%copy, $orig, "dumped hash round-trips");
 }
 
+# Bare hash keys are only emitted when they are plain identifiers. Empty
+# keys, keys starting with a digit, and other non-identifiers must be quoted
+# so the output is valid Perl that reproduces the original keys.
+{
+	my @keys = ("", "01", "1abc", "1e3", "a b");
+	for my $key (@keys) {
+		my $out = kx({ $key => 1 });
+		my $copy = eval('+' . $out);
+		is($@, '', "hash key '$key' dumps to valid Perl");
+		is_deeply([keys %$copy], [$key], "hash key '$key' round-trips");
+	}
+
+	is(kx({ "" => 1, ab => 2 }), "{ '' => 1, 'ab' => 2 }", "empty key forces quoting of all keys");
+}
+
+# Plain identifier keys stay bare
+is(kx({ abc => 1, _x9 => 2 }), "{ _x9 => 2, abc => 1 }", "identifier keys stay unquoted");
+
+# Undef through a scalar ref
+{
+	my $warn = '';
+	local $SIG{__WARN__} = sub { $warn .= shift };
+	is(kx(\undef), '\\undef', "scalar ref to undef dumps as \\undef");
+	is($warn, '', "scalar ref to undef emits no warnings");
+	is(Dump::Krumo::quote_string(undef), 'undef', "quote_string(undef) returns undef");
+}
+
 done_testing();

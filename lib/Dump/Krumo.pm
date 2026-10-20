@@ -428,10 +428,13 @@ sub __dump_hash {
 		@keys = sort(@keys);
 	}
 
-	# Check to see if any of the array keys need to be quoted
+	# Check to see if any of the hash keys need to be quoted. A bare key is
+	# only valid Perl if it is a plain identifier, so empty keys, keys that
+	# start with a digit (which would parse as numbers), and anything with
+	# non-word characters all need quoting.
 	my $keys_need_quotes = 0;
 	foreach my $key (@keys) {
-		if ($key =~ /\W/) {
+		if ($key !~ /^[A-Za-z_][A-Za-z0-9_]*\z/) {
 			$keys_need_quotes = 1;
 			last;
 		}
@@ -906,6 +909,11 @@ sub get_terminal_width {
 # See also B::perlstring as a possible alternative
 sub quote_string {
 	my ($s) = @_;
+
+	# undef has no quoted form; it is dumped as the bare word undef
+	if (!defined($s)) {
+		return 'undef';
+	}
 
 	# Use single quotes if no special chars
 	if ($s !~ /[\'\\\n\r\t\f\$@]/ ) {
